@@ -1,0 +1,33 @@
+{% extends "emails/base_email.html" %}
+{% block title %}Order Confirmed — {{ order.order_number }}{% endblock %}
+{% block content %}
+<h2>Order Confirmed!</h2>
+<p>Hi {{ order.user.first_name }},</p>
+<p>Thank you for your order. We've received it and will start preparing it soon.</p>
+
+<div class="note">
+  <p><strong>Order Number:</strong> {{ order.order_number }}</p>
+  <p><strong>Total:</strong> ₹{{ order.total }}</p>
+</div>
+
+<div class="divider"></div>
+
+<h3 style="font-size: 16px; margin-bottom: 12px;">Order Summary</h3>
+{% for item in items %}
+<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f0ece7;">
+  <div>
+    <p style="margin: 0; font-weight: 600;">{{ item.product_name }}</p>
+    <p style="margin: 4px 0 0; font-size: 13px; color: #6b6b6b;">Size: {{ item.size }} · Color: {{ item.color }} · Qty: {{ item.quantity }}</p>
+  </div>
+  <p style="margin: 0; font-weight: 600;">₹{{ item.line_total }}</p>
+</div>
+{% endfor %}
+
+<div class="divider"></div>
+
+<div class="btn-container">
+  <a href="{{ tracking_link }}" class="btn">Track Your Order</a>
+</div>
+
+<p style="font-size: 13px; color: #6b6b6b;">We'll send you another email when your order ships.</p>
+{% endblock %}

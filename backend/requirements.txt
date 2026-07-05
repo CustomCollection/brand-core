@@ -1,0 +1,42 @@
+# CustomCollection Backend - Dependencies
+# =========================================
+
+# Django core
+Django>=5.1,<5.2
+
+# Django REST Framework
+djangorestframework>=3.15,<4.0
+djangorestframework-simplejwt>=5.3,<6.0
+
+# CORS
+django-cors-headers>=4.4,<5.0
+
+# Filtering
+django-filter>=24.0
+
+# API Documentation
+drf-spectacular>=0.27
+
+# Environment variables
+python-decouple>=3.8
+
+# Database
+psycopg2-binary>=2.9,<3.0
+
+# Image storage (Cloudinary)
+cloudinary>=1.40
+django-cloudinary-storage>=0.3
+
+# Payment gateway
+razorpay>=1.4
+
+# Image processing
+Pillow>=10.0
+
+# Production server
+gunicorn>=22.0
+
+# Code quality
+black>=24.0
+isort>=5.13
+flake8>=7.0

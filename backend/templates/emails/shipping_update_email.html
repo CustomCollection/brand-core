@@ -1,0 +1,18 @@
+{% extends "emails/base_email.html" %}
+{% block title %}Your Order Has Shipped — {{ order.order_number }}{% endblock %}
+{% block content %}
+<h2>Your Order Has Shipped! 🚚</h2>
+<p>Hi {{ order.user.first_name }},</p>
+<p>Great news — your order <strong>{{ order.order_number }}</strong> has been shipped!</p>
+
+<div class="note">
+  <p><strong>Courier:</strong> {{ shipment.courier }}</p>
+  <p><strong>Tracking Number:</strong> {{ shipment.tracking_number }}</p>
+</div>
+
+<div class="btn-container">
+  <a href="{{ tracking_link }}" class="btn">Track Your Order</a>
+</div>
+
+<p>You'll receive another email once your order is delivered.</p>
+{% endblock %}

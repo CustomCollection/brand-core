@@ -1,0 +1,17 @@
+{% extends "emails/base_email.html" %}
+{% block title %}Order Delivered — {{ order.order_number }}{% endblock %}
+{% block content %}
+<h2>Order Delivered! 🎉</h2>
+<p>Hi {{ order.user.first_name }},</p>
+<p>Your order <strong>{{ order.order_number }}</strong> has been delivered. We hope you love it!</p>
+
+<div class="divider"></div>
+
+<p>We'd love to hear your feedback. Share a review and let others know what you think.</p>
+
+<div class="btn-container">
+  <a href="{{ review_link }}" class="btn">Write a Review</a>
+</div>
+
+<p style="font-size: 13px; color: #6b6b6b;">Thank you for choosing CustomCollection. See you next time!</p>
+{% endblock %}

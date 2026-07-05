@@ -1,0 +1,10 @@
+{
+  "name": "CustomCollection",
+  "short_name": "CC",
+  "description": "Premium Fashion, Redefined",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FFFFFF",
+  "theme_color": "#0A0A0A",
+  "icons": []
+}

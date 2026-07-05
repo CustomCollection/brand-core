@@ -1,0 +1,12 @@
+{% extends "emails/base_email.html" %}
+{% block title %}Welcome to CustomCollection{% endblock %}
+{% block content %}
+<h2>Welcome, {{ user.first_name }}!</h2>
+<p>Your email has been verified and your account is ready. We're thrilled to have you join the CustomCollection family.</p>
+<p>Explore our curated collection of premium T-shirts — designed for those who appreciate quality and style.</p>
+<div class="btn-container">
+  <a href="{{ shop_link }}" class="btn">Start Shopping</a>
+</div>
+<div class="divider"></div>
+<p>If you have any questions, simply reply to this email. We're here to help.</p>
+{% endblock %}
