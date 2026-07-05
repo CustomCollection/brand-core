@@ -38,6 +38,7 @@ export function CartProvider({ children }) {
   const { isAuthenticated } = useAuth();
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isCartOpen, setIsCartOpen] = useState(false);
 
   const itemCount = useMemo(() => items.reduce((sum, item) => sum + (item.quantity || 0), 0), [items]);
 
@@ -75,15 +76,17 @@ export function CartProvider({ children }) {
   const addItem = useCallback(
     async (product) => {
       if (isAuthenticated) {
-        await apiPost(ENDPOINTS.CART.BASE, {
-          product_variant: product.variantId,
+        await apiPost(ENDPOINTS.CART.BASE + 'add/', {
+          product_id: product.id,
+          size_id: product.size_id,
+          color_id: product.color_id,
           quantity: product.quantity || 1,
         });
         await fetchCart();
       } else {
         const currentItems = getGuestCart();
         const existingIndex = currentItems.findIndex(
-          (item) => item.variantId === product.variantId
+          (item) => item.product_id === product.id && item.size_id === product.size_id && item.color_id === product.color_id
         );
 
         if (existingIndex > -1) {
@@ -91,7 +94,8 @@ export function CartProvider({ children }) {
         } else {
           currentItems.push({
             ...product,
-            id: getOrCreateGuestCartId() + '_' + Date.now(),
+            product_id: product.id,
+            guest_id: getOrCreateGuestCartId() + '_' + Date.now(),
             quantity: product.quantity || 1,
           });
         }
@@ -160,6 +164,8 @@ export function CartProvider({ children }) {
     updateQuantity,
     clearCart,
     refreshCart: fetchCart,
+    isCartOpen,
+    setIsCartOpen,
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

@@ -1,6 +1,13 @@
 import { ENDPOINTS } from '@/lib/endpoints';
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+const isServer = typeof window === 'undefined';
+let BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+
+// When running inside Docker Next.js SSR, localhost points to the Next.js container, not the backend.
+// We override it to point to the backend container.
+if (isServer && BASE_URL.includes('localhost')) {
+  BASE_URL = BASE_URL.replace('localhost', 'backend');
+}
 
 let isRefreshing = false;
 let refreshQueue = [];
@@ -125,6 +132,11 @@ async function request(endpoint, options = {}) {
         : data || `Request failed with status ${response.status}`;
 
     throw new ApiError(message, response.status, data);
+  }
+
+  // Unwrap the backend's custom response envelope if present
+  if (data && typeof data === 'object' && data.status === 'success' && data.data !== undefined) {
+    return data.data;
   }
 
   return data;

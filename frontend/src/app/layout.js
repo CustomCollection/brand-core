@@ -4,6 +4,9 @@ import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
 import { WishlistProvider } from '@/context/WishlistContext';
 import { ToastProvider } from '@/components/ui/Toast';
+import Header from '@/components/layout/Header';
+import Footer from '@/components/layout/Footer';
+import CartDrawer from '@/components/cart/CartDrawer';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -43,12 +46,17 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="min-h-screen bg-background font-sans antialiased">
+      <body className="min-h-screen bg-background font-sans antialiased flex flex-col">
         <AuthProvider>
           <CartProvider>
             <WishlistProvider>
               <ToastProvider>
-                {children}
+                <Header />
+                <div className="flex-1">
+                  {children}
+                </div>
+                <Footer />
+                <CartDrawer />
               </ToastProvider>
             </WishlistProvider>
           </CartProvider>
