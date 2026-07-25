@@ -1,118 +1,128 @@
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
 import { apiGet } from '@/lib/api';
 import { ENDPOINTS } from '@/lib/endpoints';
+import { formatPrice } from '@/lib/utils';
+import ImageGallery from '@/components/product/ImageGallery';
 import ProductDetails from '@/components/product/ProductDetails';
+import ReviewList from '@/components/product/ReviewList';
+import ReviewForm from '@/components/product/ReviewForm';
 import ProductCard from '@/components/product/ProductCard';
-import Link from 'next/link';
 
 export async function generateMetadata({ params }) {
+  const { slug } = await params;
   try {
-    const { slug } = await params;
     const product = await apiGet(ENDPOINTS.PRODUCTS.DETAIL(slug));
     return {
-      title: product.name,
-      description: product.description,
+      title: product.meta_title || product.name,
+      description: product.meta_description || product.short_description,
     };
   } catch {
-    return {
-      title: 'Product Not Found',
-    };
+    return { title: 'Product Not Found' };
   }
 }
 
 async function getProduct(slug) {
   try {
-    return await apiGet(ENDPOINTS.PRODUCTS.DETAIL(slug), { next: { revalidate: 60 } });
+    return await apiGet(ENDPOINTS.PRODUCTS.DETAIL(slug), { cache: 'no-store' });
   } catch {
     return null;
   }
 }
 
-async function getRelatedProducts() {
+async function getReviews(slug) {
   try {
-    // Just fetch some products for the related section mockup
-    const data = await apiGet(ENDPOINTS.PRODUCTS.LIST, { next: { revalidate: 60 } });
-    return data?.results?.slice(0, 4) || [];
+    const data = await apiGet(ENDPOINTS.REVIEWS.LIST(slug), { cache: 'no-store' });
+    // Reviews may be paginated or plain array
+    return {
+      results: Array.isArray(data) ? data : (data?.results || []),
+      count: data?.count || (Array.isArray(data) ? data.length : 0),
+    };
+  } catch {
+    return { results: [], count: 0 };
+  }
+}
+
+async function getRelatedProducts(collections) {
+  if (!collections?.length) return [];
+  try {
+    const slug = collections[0].slug;
+    const data = await apiGet(
+      `${ENDPOINTS.PRODUCTS.LIST}?collection=${slug}&page_size=4`,
+      { cache: 'no-store' }
+    );
+    return data?.results || [];
   } catch {
     return [];
   }
 }
 
-export default async function ProductPage({ params }) {
+export default async function ProductDetailPage({ params }) {
   const { slug } = await params;
-  const product = await getProduct(slug);
-  const relatedProducts = await getRelatedProducts();
+  const [product, reviews] = await Promise.all([
+    getProduct(slug),
+    getReviews(slug),
+  ]);
 
-  if (!product) {
-    return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center text-center">
-        <h1 className="text-3xl font-light text-text-primary mb-4">Product Not Found</h1>
-        <p className="text-text-secondary mb-8">The product you are looking for does not exist or has been removed.</p>
-        <Link href="/products" className="text-sm font-medium uppercase tracking-widest text-accent hover:underline">
-          Return to Shop
-        </Link>
-      </div>
-    );
-  }
+  if (!product) notFound();
+
+  const related = await getRelatedProducts(product.collections);
+  // Filter out the current product from related
+  const relatedProducts = related.filter((p) => p.slug !== slug).slice(0, 4);
 
   return (
-    <div className="bg-background pt-24 pb-16">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Breadcrumbs */}
-        <nav className="mb-8 flex text-xs uppercase tracking-wider text-text-muted">
-          <Link href="/" className="hover:text-text-primary transition-colors">Home</Link>
-          <span className="mx-3">/</span>
-          <Link href="/products" className="hover:text-text-primary transition-colors">Shop</Link>
-          <span className="mx-3">/</span>
-          <span className="text-text-primary">{product.name}</span>
+    <div className='bg-background pt-16'>
+      <div className='mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8'>
+        {/* Breadcrumb */}
+        <nav className='mb-8 flex items-center gap-2 text-xs text-text-muted'>
+          <Link href='/' className='hover:text-accent transition-colors'>Home</Link>
+          <span>/</span>
+          <Link href='/products' className='hover:text-accent transition-colors'>Products</Link>
+          <span>/</span>
+          <span className='text-text-primary'>{product.name}</span>
         </nav>
 
-        {/* Product Details Component (Client-side interactive) */}
-        <ProductDetails product={product} />
+        {/* Product grid */}
+        <div className='grid grid-cols-1 gap-12 lg:grid-cols-2'>
+          {/* Images */}
+          <ImageGallery
+            images={product.images || (product.primary_image ? [{ id: 0, image_url: product.primary_image, alt_text: product.name, is_primary: true, sort_order: 0 }] : [])}
+            productName={product.name}
+          />
 
-        {/* Reviews Section Mockup (Can be a separate component if interactive) */}
-        <div className="mt-32 border-t border-border pt-16">
-          <h2 className="text-2xl font-light text-text-primary uppercase tracking-widest mb-12 text-center">Customer Reviews</h2>
-          <div className="flex flex-col lg:flex-row gap-12">
-            <div className="lg:w-1/3 text-center lg:text-left">
-              <div className="text-6xl font-light text-text-primary mb-2">4.8</div>
-              <div className="flex justify-center lg:justify-start text-accent mb-2">
-                {[1,2,3,4,5].map(i => (
-                   <svg key={i} className="h-5 w-5 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-                ))}
-              </div>
-              <p className="text-sm text-text-secondary">Based on 124 reviews</p>
-              <button className="mt-6 border border-primary px-6 py-3 text-sm font-medium uppercase tracking-widest text-primary hover:bg-primary hover:text-white transition-colors">
+          {/* Details */}
+          <ProductDetails product={product} />
+        </div>
+
+        {/* Reviews */}
+        <div className='mt-20 border-t border-border pt-12'>
+          <h2 className='text-2xl font-light uppercase tracking-widest text-text-primary mb-8'>
+            Reviews
+          </h2>
+          <div className='grid grid-cols-1 lg:grid-cols-2 gap-12'>
+            <ReviewList
+              reviews={reviews.results}
+              count={reviews.count}
+              averageRating={product.average_rating}
+            />
+            <div>
+              <h3 className='text-sm font-semibold uppercase tracking-widest text-text-primary mb-6'>
                 Write a Review
-              </button>
-            </div>
-            
-            <div className="lg:w-2/3 space-y-8">
-              {[1, 2, 3].map((review) => (
-                <div key={review} className="border-b border-border pb-8 last:border-0 last:pb-0">
-                  <div className="flex justify-between items-start mb-2">
-                    <div className="flex text-accent text-sm">
-                       {[1,2,3,4,5].map(i => <svg key={i} className="h-4 w-4 fill-current" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>)}
-                    </div>
-                    <span className="text-xs text-text-muted">Oct 24, 2025</span>
-                  </div>
-                  <h4 className="text-sm font-medium text-text-primary mb-2">Exceeded Expectations</h4>
-                  <p className="text-sm font-light text-text-secondary leading-relaxed">
-                    The quality of the material is outstanding. It fits perfectly and feels incredibly premium. I've received multiple compliments already. Highly recommend!
-                  </p>
-                  <p className="mt-4 text-xs font-medium text-text-muted uppercase tracking-wider">Jane D. <span className="opacity-50">Verified Buyer</span></p>
-                </div>
-              ))}
+              </h3>
+              <ReviewForm productSlug={slug} />
             </div>
           </div>
         </div>
 
-        {/* You May Also Like */}
+        {/* Related products */}
         {relatedProducts.length > 0 && (
-          <div className="mt-32 pt-16 border-t border-border">
-            <h2 className="text-2xl font-light text-text-primary uppercase tracking-widest mb-12 text-center">You May Also Like</h2>
-            <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-              {relatedProducts.map(rp => (
-                <ProductCard key={rp.id} product={rp} />
+          <div className='mt-20 border-t border-border pt-12'>
+            <h2 className='text-2xl font-light uppercase tracking-widest text-text-primary mb-8'>
+              You May Also Like
+            </h2>
+            <div className='grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-4'>
+              {relatedProducts.map((p) => (
+                <ProductCard key={p.id} product={p} />
               ))}
             </div>
           </div>

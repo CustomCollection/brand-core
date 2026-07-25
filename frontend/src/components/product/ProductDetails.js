@@ -1,181 +1,287 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
+import { Truck, RotateCcw, ShieldCheck, Heart, Star, Minus, Plus } from 'lucide-react';
+import { cn, formatPrice } from '@/lib/utils';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
+import { useAuth } from '@/context/AuthContext';
+import { useToast } from '@/components/ui/Toast';
+import Button from '@/components/ui/Button';
+import { FREE_SHIPPING_THRESHOLD, SHIPPING_CHARGE } from '@/lib/constants';
 
 export default function ProductDetails({ product }) {
+  const { addItem, openCart } = useCart();
+  const { toggleWishlist, isInWishlist } = useWishlist();
+  const { user } = useAuth();
+  const toast = useToast();
+
   const [selectedSize, setSelectedSize] = useState(null);
   const [selectedColor, setSelectedColor] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const [activeImage, setActiveImage] = useState(0);
-  const [isAdding, setIsAdding] = useState(false);
-  
-  const { addItem } = useCart();
-  const { items: wishlistItems, addItem: addWishlist, removeItem: removeWishlist } = useWishlist();
-  
-  const isWishlisted = wishlistItems.some((item) => item.product_id === product.id);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
-  const images = product.images?.length > 0 ? product.images : [{ image: product.image || 'https://via.placeholder.com/800x1200' }];
-  
-  // Fake sizes and colors if none provided by API for mockup
-  const sizes = product.variants?.map(v => v.size).filter(Boolean) || ['XS', 'S', 'M', 'L', 'XL'];
-  const colors = product.variants?.map(v => v.color).filter(Boolean) || ['Black', 'White', 'Navy'];
+  const inWishlist = isInWishlist(product.id);
+  const effectivePrice = parseFloat(product.effective_price || product.price);
+  const hasDiscount =
+    product.discount_price &&
+    parseFloat(product.discount_price) < parseFloat(product.price);
 
   const handleAddToCart = async () => {
-    // In a real app we'd validate variants
-    setIsAdding(true);
+    if (!selectedSize && product.sizes?.length > 0) {
+      toast.warning('Please select a size.');
+      return;
+    }
+    if (!selectedColor && product.colors?.length > 0) {
+      toast.warning('Please select a color.');
+      return;
+    }
+
+    setIsAddingToCart(true);
     try {
-      await addItem(product.id, quantity, { size: selectedSize, color: selectedColor });
-      setTimeout(() => setIsAdding(false), 500);
-    } catch (error) {
-      console.error('Failed to add to cart:', error);
-      setIsAdding(false);
+      await addItem({
+        product_id: product.id,
+        size_id: selectedSize?.id,
+        color_id: selectedColor?.id,
+        quantity,
+        product_data: {
+          ...product,
+          selected_size_name: selectedSize?.name,
+          selected_color_name: selectedColor?.name,
+        },
+      });
+      toast.success(`${product.name} added to cart!`);
+      openCart();
+    } catch (err) {
+      toast.error(err.message || 'Failed to add to cart.');
+    } finally {
+      setIsAddingToCart(false);
     }
   };
 
-  const toggleWishlist = () => {
-    if (isWishlisted) {
-      const wishlistItem = wishlistItems.find(item => item.product_id === product.id);
-      if (wishlistItem) removeWishlist(wishlistItem.id);
-    } else {
-      addWishlist(product.id);
+  const handleWishlist = async () => {
+    if (!user) {
+      toast.info('Please sign in to save to wishlist.');
+      return;
+    }
+    try {
+      await toggleWishlist(product.id);
+      toast.success(inWishlist ? 'Removed from wishlist.' : 'Added to wishlist.');
+    } catch {
+      toast.error('Something went wrong.');
     }
   };
 
   return (
-    <div className="flex flex-col lg:flex-row gap-12">
-      {/* Image Gallery */}
-      <div className="lg:w-1/2 flex flex-col-reverse sm:flex-row gap-4">
-        {/* Thumbnails */}
-        <div className="flex sm:flex-col gap-4 overflow-x-auto sm:overflow-y-auto sm:w-24 hide-scrollbar">
-          {images.map((img, idx) => (
-            <button 
-              key={idx} 
-              onClick={() => setActiveImage(idx)}
-              className={`relative aspect-[3/4] w-20 sm:w-full flex-shrink-0 overflow-hidden border transition-all ${activeImage === idx ? 'border-accent opacity-100' : 'border-transparent opacity-60 hover:opacity-100'}`}
-            >
-              <Image src={img.image} alt={`${product.name} thumbnail ${idx + 1}`} fill className="object-cover" />
-            </button>
-          ))}
-        </div>
-        
-        {/* Main Image */}
-        <div className="relative aspect-[3/4] flex-1 overflow-hidden bg-surface">
-          <Image 
-            src={images[activeImage]?.image} 
-            alt={product.name} 
-            fill 
-            className="object-cover transition-opacity duration-500" 
-            priority
-          />
-        </div>
-      </div>
+    <div className='space-y-6'>
+      {/* Collections */}
+      {product.collections?.length > 0 && (
+        <p className='text-xs font-semibold uppercase tracking-widest text-accent'>
+          {product.collections.map((c) => c.name).join(' / ')}
+        </p>
+      )}
 
-      {/* Product Info */}
-      <div className="lg:w-1/2 flex flex-col py-8 lg:py-0">
-        <div className="mb-2 text-xs uppercase tracking-widest text-text-secondary">{product.collection_name || 'Premium'}</div>
-        <h1 className="text-3xl sm:text-4xl font-light text-text-primary mb-4">{product.name}</h1>
-        <div className="text-xl font-medium text-text-primary mb-6">${product.price}</div>
-        
-        <div className="prose prose-sm text-text-secondary mb-8 font-light leading-relaxed">
-          {product.description || 'Experience ultimate comfort and style with this meticulously crafted piece. Designed for the modern individual who appreciates quality and subtle elegance.'}
-        </div>
+      {/* Name */}
+      <h1 className='text-3xl font-light uppercase tracking-wider text-text-primary'>
+        {product.name}
+      </h1>
 
-        <div className="h-px w-full bg-border mb-8" />
-
-        {/* Colors */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-4">
-            <span className="text-sm font-medium uppercase tracking-wider text-text-primary">Color: {selectedColor}</span>
-          </div>
-          <div className="flex gap-3">
-            {colors.map((color) => (
-              <button 
-                key={color}
-                onClick={() => setSelectedColor(color)}
-                className={`h-8 w-8 rounded-full border-2 shadow-sm transition-all ${selectedColor === color ? 'border-accent scale-110' : 'border-border hover:scale-105'}`}
-                style={{ backgroundColor: color.toLowerCase() === 'navy' ? '#000080' : color.toLowerCase() }}
-                title={color}
-                aria-label={`Select ${color}`}
+      {/* Rating */}
+      {product.average_rating && (
+        <div className='flex items-center gap-2'>
+          <div className='flex gap-0.5'>
+            {Array.from({ length: 5 }).map((_, i) => (
+              <Star
+                key={i}
+                size={14}
+                className={
+                  i < Math.round(product.average_rating)
+                    ? 'text-accent fill-accent'
+                    : 'text-border fill-border'
+                }
               />
             ))}
           </div>
+          <span className='text-xs text-text-muted'>
+            {product.average_rating} ({product.review_count} reviews)
+          </span>
         </div>
+      )}
 
-        {/* Sizes */}
-        <div className="mb-8">
-          <div className="flex justify-between items-center mb-4">
-            <span className="text-sm font-medium uppercase tracking-wider text-text-primary">Size</span>
-            <button className="text-xs text-text-secondary underline hover:text-text-primary">Size Guide</button>
+      {/* Price */}
+      <div className='flex items-baseline gap-3'>
+        <span className='text-2xl font-semibold text-text-primary'>
+          {formatPrice(effectivePrice)}
+        </span>
+        {hasDiscount && (
+          <>
+            <span className='text-base text-text-muted line-through'>
+              {formatPrice(product.price)}
+            </span>
+            <span className='text-xs font-semibold text-error bg-error-light px-2 py-0.5'>
+              -{product.discount_percentage}% OFF
+            </span>
+          </>
+        )}
+      </div>
+
+      {/* Short description */}
+      {product.short_description && (
+        <p className='text-sm text-text-secondary leading-relaxed'>
+          {product.short_description}
+        </p>
+      )}
+
+      <div className='h-px bg-border' />
+
+      {/* Size selector */}
+      {product.sizes?.length > 0 && (
+        <div>
+          <div className='flex items-center justify-between mb-3'>
+            <p className='text-xs font-semibold uppercase tracking-widest text-text-primary'>
+              Size{selectedSize ? `: ${selectedSize.name}` : ' — Select'}
+            </p>
           </div>
-          <div className="grid grid-cols-5 gap-2">
-            {sizes.map((size) => (
-              <button 
-                key={size}
+          <div className='flex flex-wrap gap-2'>
+            {product.sizes.map((size) => (
+              <button
+                key={size.id}
                 onClick={() => setSelectedSize(size)}
-                className={`py-3 text-sm transition-colors border ${selectedSize === size ? 'border-accent bg-accent text-primary font-medium' : 'border-border text-text-secondary hover:border-text-primary'}`}
+                className={cn(
+                  'h-10 min-w-[40px] px-3 border text-sm font-medium transition-all',
+                  selectedSize?.id === size.id
+                    ? 'border-primary bg-primary text-background'
+                    : 'border-border text-text-primary hover:border-primary'
+                )}
               >
-                {size}
+                {size.name}
               </button>
             ))}
           </div>
         </div>
+      )}
 
-        {/* Quantity and Actions */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-8">
-          <div className="flex items-center border border-border">
-            <button 
-              onClick={() => setQuantity(q => Math.max(1, q - 1))}
-              className="px-4 py-3 text-text-secondary hover:text-text-primary hover:bg-surface transition-colors"
-            >
-              -
-            </button>
-            <span className="w-8 text-center text-sm font-medium">{quantity}</span>
-            <button 
-              onClick={() => setQuantity(q => q + 1)}
-              className="px-4 py-3 text-text-secondary hover:text-text-primary hover:bg-surface transition-colors"
-            >
-              +
-            </button>
+      {/* Color selector */}
+      {product.colors?.length > 0 && (
+        <div>
+          <p className='text-xs font-semibold uppercase tracking-widest text-text-primary mb-3'>
+            Color{selectedColor ? `: ${selectedColor.name}` : ' — Select'}
+          </p>
+          <div className='flex flex-wrap gap-3'>
+            {product.colors.map((color) => (
+              <button
+                key={color.id}
+                onClick={() => setSelectedColor(color)}
+                className={cn(
+                  'h-9 w-9 rounded-full border-2 transition-all',
+                  selectedColor?.id === color.id
+                    ? 'border-primary scale-110 shadow-md'
+                    : 'border-transparent hover:border-border'
+                )}
+                style={{ backgroundColor: color.hex_code }}
+                title={color.name}
+                aria-label={color.name}
+              />
+            ))}
           </div>
-          
-          <button 
-            onClick={handleAddToCart}
-            disabled={isAdding}
-            className="flex-1 bg-primary text-white text-sm font-medium uppercase tracking-widest py-4 border border-primary hover:bg-transparent hover:text-primary transition-all disabled:opacity-70 disabled:cursor-not-allowed"
-          >
-            {isAdding ? 'Adding...' : 'Add to Cart'}
-          </button>
-          
-          <button 
-            onClick={toggleWishlist}
-            className={`flex items-center justify-center p-4 border transition-colors ${isWishlisted ? 'border-accent text-accent' : 'border-border text-text-secondary hover:border-text-primary'}`}
-            aria-label="Wishlist"
-          >
-            <svg className="h-5 w-5" fill={isWishlisted ? 'currentColor' : 'none'} viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
-            </svg>
-          </button>
         </div>
+      )}
 
-        {/* Product Meta */}
-        <div className="space-y-4 border-t border-border pt-8 text-sm">
-          <div className="flex">
-            <span className="w-32 text-text-muted">Materials</span>
-            <span className="text-text-secondary">100% Premium Organic Cotton</span>
-          </div>
-          <div className="flex">
-            <span className="w-32 text-text-muted">Care</span>
-            <span className="text-text-secondary">Machine wash cold. Do not bleach.</span>
-          </div>
-          <div className="flex">
-            <span className="w-32 text-text-muted">Shipping</span>
-            <span className="text-text-secondary">Free shipping on orders over $150</span>
-          </div>
+      {/* Quantity */}
+      <div>
+        <p className='text-xs font-semibold uppercase tracking-widest text-text-primary mb-3'>Quantity</p>
+        <div className='flex items-center border border-border w-fit'>
+          <button
+            onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+            className='h-10 w-10 flex items-center justify-center text-text-muted hover:text-text-primary transition-colors'
+            aria-label='Decrease quantity'
+          >
+            <Minus size={14} />
+          </button>
+          <span className='h-10 w-12 flex items-center justify-center text-sm font-medium text-text-primary border-x border-border'>
+            {quantity}
+          </span>
+          <button
+            onClick={() => setQuantity((q) => q + 1)}
+            className='h-10 w-10 flex items-center justify-center text-text-muted hover:text-text-primary transition-colors'
+            aria-label='Increase quantity'
+          >
+            <Plus size={14} />
+          </button>
         </div>
       </div>
+
+      {/* Actions */}
+      <div className='flex gap-3'>
+        <Button
+          onClick={handleAddToCart}
+          isLoading={isAddingToCart}
+          className='flex-1'
+          size='lg'
+        >
+          Add to Cart
+        </Button>
+        <button
+          onClick={handleWishlist}
+          className={cn(
+            'h-14 w-14 flex-shrink-0 border flex items-center justify-center transition-colors',
+            inWishlist
+              ? 'border-accent bg-accent text-background'
+              : 'border-border text-text-primary hover:border-accent hover:text-accent'
+          )}
+          aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
+        >
+          <Heart size={18} fill={inWishlist ? 'currentColor' : 'none'} />
+        </button>
+      </div>
+
+      {/* Shipping info */}
+      <div className='space-y-3 pt-2 border-t border-border'>
+        <div className='flex items-center gap-3 text-sm text-text-secondary'>
+          <Truck size={16} className='text-accent flex-shrink-0' />
+          <span>
+            Free shipping on orders above {formatPrice(FREE_SHIPPING_THRESHOLD)}. Flat {formatPrice(SHIPPING_CHARGE)} below.
+          </span>
+        </div>
+        <div className='flex items-center gap-3 text-sm text-text-secondary'>
+          <RotateCcw size={16} className='text-accent flex-shrink-0' />
+          <span>7-day easy return policy.</span>
+        </div>
+        <div className='flex items-center gap-3 text-sm text-text-secondary'>
+          <ShieldCheck size={16} className='text-accent flex-shrink-0' />
+          <span>100% genuine, print-on-demand product.</span>
+        </div>
+      </div>
+
+      {/* Description */}
+      {product.description && (
+        <details className='border-t border-border pt-4'>
+          <summary className='text-xs font-semibold uppercase tracking-widest text-text-primary cursor-pointer hover:text-accent transition-colors'>
+            Description
+          </summary>
+          <p className='mt-3 text-sm text-text-secondary leading-relaxed'>{product.description}</p>
+        </details>
+      )}
+
+      {/* Wash care */}
+      {product.wash_care && (
+        <details className='border-t border-border pt-4'>
+          <summary className='text-xs font-semibold uppercase tracking-widest text-text-primary cursor-pointer hover:text-accent transition-colors'>
+            Wash & Care
+          </summary>
+          <p className='mt-3 text-sm text-text-secondary leading-relaxed'>{product.wash_care}</p>
+        </details>
+      )}
+
+      {/* Shipping info detail */}
+      {product.shipping_info && (
+        <details className='border-t border-border pt-4'>
+          <summary className='text-xs font-semibold uppercase tracking-widest text-text-primary cursor-pointer hover:text-accent transition-colors'>
+            Shipping Info
+          </summary>
+          <p className='mt-3 text-sm text-text-secondary leading-relaxed'>{product.shipping_info}</p>
+        </details>
+      )}
     </div>
   );
 }

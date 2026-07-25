@@ -2,70 +2,69 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { classNames } from '@/lib/utils';
+import { User, MapPin, Package, Heart, LogOut } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import Button from '@/components/ui/Button';
-import { useToast } from '@/components/ui/Toast';
+import { cn } from '@/lib/utils';
+
+const NAV_ITEMS = [
+  { label: 'My Profile', href: '/account/profile', icon: User },
+  { label: 'My Orders', href: '/account/orders', icon: Package },
+  { label: 'Addresses', href: '/account/addresses', icon: MapPin },
+  { label: 'Wishlist', href: '/account/wishlist', icon: Heart },
+];
 
 export default function AccountSidebar() {
   const pathname = usePathname();
-  const { logout, user } = useAuth();
   const router = useRouter();
-  const toast = useToast();
+  const { user, logout } = useAuth();
 
   const handleLogout = async () => {
-    try {
-      await logout();
-      toast.success('Successfully logged out.');
-      router.push('/');
-    } catch {
-      toast.error('Failed to log out.');
-    }
+    await logout();
+    router.push('/');
   };
 
-  const navigation = [
-    { name: 'Profile Overview', href: '/profile' },
-    { name: 'Addresses', href: '/addresses' },
-    { name: 'Orders', href: '/orders' },
-  ];
-
   return (
-    <aside className="w-full md:w-64 shrink-0">
-      <div className="mb-8 px-4">
-        <p className="text-sm text-text-secondary">Welcome back,</p>
-        <p className="text-lg font-medium text-primary">
-          {user?.first_name ? `${user.first_name} ${user.last_name}` : 'User'}
-        </p>
-      </div>
+    <aside className='w-full lg:w-64 flex-shrink-0'>
+      <div className='sticky top-24 space-y-1'>
+        {/* User info */}
+        {user && (
+          <div className='px-4 py-4 mb-4 bg-surface border border-border'>
+            <p className='text-sm font-semibold text-text-primary'>
+              {user.first_name} {user.last_name}
+            </p>
+            <p className='text-xs text-text-muted mt-0.5 truncate'>{user.email}</p>
+          </div>
+        )}
 
-      <nav className="flex flex-col gap-2">
-        {navigation.map((item) => {
-          const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+        {/* Nav items */}
+        {NAV_ITEMS.map(({ label, href, icon: Icon }) => {
+          const active = pathname === href || pathname.startsWith(href + '/');
           return (
             <Link
-              key={item.name}
-              href={item.href}
-              className={classNames(
-                'px-4 py-3 text-sm transition-colors duration-200 border-l-2',
-                isActive
-                  ? 'border-primary bg-surface font-medium text-primary'
-                  : 'border-transparent text-text-secondary hover:bg-surface hover:text-primary hover:border-border'
+              key={href}
+              href={href}
+              className={cn(
+                'flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors border-l-2',
+                active
+                  ? 'border-accent text-text-primary bg-surface'
+                  : 'border-transparent text-text-secondary hover:text-text-primary hover:bg-surface'
               )}
             >
-              {item.name}
+              <Icon size={16} />
+              {label}
             </Link>
           );
         })}
-        <div className="mt-8 px-4 border-t border-border pt-6">
-          <Button 
-            variant="ghost" 
-            onClick={handleLogout} 
-            className="w-full justify-start px-0 text-error hover:text-error hover:bg-error-light focus-visible:ring-error/50"
-          >
-            Sign Out
-          </Button>
-        </div>
-      </nav>
+
+        {/* Logout */}
+        <button
+          onClick={handleLogout}
+          className='flex items-center gap-3 px-4 py-3 text-sm font-medium text-error hover:bg-error-light transition-colors w-full border-l-2 border-transparent mt-4'
+        >
+          <LogOut size={16} />
+          Sign Out
+        </button>
+      </div>
     </aside>
   );
 }

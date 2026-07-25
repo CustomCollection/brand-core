@@ -1,40 +1,50 @@
-export const BRAND_NAME = 'CustomCollection';
-export const BRAND_TAGLINE = 'Premium Fashion, Redefined';
+/**
+ * Application-wide constants.
+ */
+
+export const BRAND_NAME = process.env.NEXT_PUBLIC_BRAND_NAME || 'CustomCollection';
 
 export const GUEST_CART_KEY = 'cc_guest_cart';
 export const GUEST_CART_ID_KEY = 'cc_guest_cart_id';
 
-export const TOAST_DURATION = 3000;
+export const ITEMS_PER_PAGE = 12;
 
-export const SIZES = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
-
-export const COLORS = [
-  { name: 'Black', hex: '#0A0A0A' },
-  { name: 'White', hex: '#FFFFFF' },
-  { name: 'Navy', hex: '#1B2A4A' },
-  { name: 'Gray', hex: '#6B6B6B' },
-  { name: 'Olive', hex: '#556B2F' },
-  { name: 'Burgundy', hex: '#722F37' },
-  { name: 'Beige', hex: '#D4C5A9' },
-  { name: 'Charcoal', hex: '#36454F' },
-];
+export const FREE_SHIPPING_THRESHOLD = 999;
+export const SHIPPING_CHARGE = 99;
 
 export const ORDER_STATUSES = {
-  PENDING: { label: 'Pending', color: 'bg-amber-100 text-amber-800' },
-  CONFIRMED: { label: 'Confirmed', color: 'bg-blue-100 text-blue-800' },
-  PROCESSING: { label: 'Processing', color: 'bg-indigo-100 text-indigo-800' },
-  SHIPPED: { label: 'Shipped', color: 'bg-purple-100 text-purple-800' },
-  DELIVERED: { label: 'Delivered', color: 'bg-green-100 text-green-800' },
-  CANCELLED: { label: 'Cancelled', color: 'bg-red-100 text-red-800' },
-  REFUNDED: { label: 'Refunded', color: 'bg-gray-100 text-gray-800' },
+  pending: { label: 'Pending', color: 'warning' },
+  confirmed: { label: 'Confirmed', color: 'info' },
+  printing: { label: 'Printing', color: 'info' },
+  packed: { label: 'Packed', color: 'info' },
+  shipped: { label: 'Shipped', color: 'info' },
+  delivered: { label: 'Delivered', color: 'success' },
+  cancelled: { label: 'Cancelled', color: 'error' },
+  returned: { label: 'Returned', color: 'error' },
 };
 
-export const BREAKPOINTS = {
-  sm: 640,
-  md: 768,
-  lg: 1024,
-  xl: 1280,
-  '2xl': 1536,
+export const ORDER_STATUS_STEPS = [
+  'pending',
+  'confirmed',
+  'printing',
+  'packed',
+  'shipped',
+  'delivered',
+];
+
+export const SORT_OPTIONS = [
+  { label: 'Newest', value: '-created_at' },
+  { label: 'Oldest', value: 'created_at' },
+  { label: 'Price: Low to High', value: 'price' },
+  { label: 'Price: High to Low', value: '-price' },
+  { label: 'Name A–Z', value: 'name' },
+];
+
+export const PAYMENT_METHODS = {
+  razorpay: 'razorpay',
+  cod: 'cod',
 };
 
-export const ITEMS_PER_PAGE = 12;
+export const TOAST_DURATION = 4000;
+
+export const IMAGE_DOMAINS = ['res.cloudinary.com', 'images.unsplash.com'];

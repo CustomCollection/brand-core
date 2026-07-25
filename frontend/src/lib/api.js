@@ -1,45 +1,51 @@
 import { ENDPOINTS } from '@/lib/endpoints';
 
+// Determine if we are running on the server (SSR) or in the browser
 const isServer = typeof window === 'undefined';
-let BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
 
-// When running inside Docker Next.js SSR, localhost points to the Next.js container, not the backend.
-// We override it to point to the backend container.
-if (isServer && BASE_URL.includes('localhost')) {
-  BASE_URL = BASE_URL.replace('localhost', 'backend');
+// Compute the base URL — on the server inside Docker, 'localhost' must be
+// replaced with the Docker service name 'backend' for container networking.
+function getBaseUrl() {
+  const url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+  if (isServer && url.includes('localhost')) {
+    return url.replace('localhost', 'backend');
+  }
+  return url;
 }
 
+const BASE_URL = getBaseUrl();
+
+// ─── Refresh token queue to batch concurrent 401s ───
 let isRefreshing = false;
 let refreshQueue = [];
 
 function processRefreshQueue(error) {
   refreshQueue.forEach(({ resolve, reject }) => {
-    if (error) {
-      reject(error);
-    } else {
-      resolve();
-    }
+    if (error) reject(error);
+    else resolve();
   });
   refreshQueue = [];
 }
 
 async function refreshAccessToken() {
-  const response = await fetch(`${BASE_URL}${ENDPOINTS.AUTH.REFRESH_TOKEN}`, {
+  const refreshUrl = isServer
+    ? `${BASE_URL}${ENDPOINTS.AUTH.REFRESH_TOKEN}`
+    : `${getBaseUrl()}${ENDPOINTS.AUTH.REFRESH_TOKEN}`;
+
+  const response = await fetch(refreshUrl, {
     method: 'POST',
     credentials: 'include',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers: { 'Content-Type': 'application/json' },
   });
 
   if (!response.ok) {
     throw new Error('Token refresh failed');
   }
-
   return response.json();
 }
 
-class ApiError extends Error {
+// ─── Custom error class ───
+export class ApiError extends Error {
   constructor(message, status, data) {
     super(message);
     this.name = 'ApiError';
@@ -48,6 +54,7 @@ class ApiError extends Error {
   }
 }
 
+// ─── Core request function ───
 async function request(endpoint, options = {}) {
   const {
     method = 'GET',
@@ -77,22 +84,28 @@ async function request(endpoint, options = {}) {
     config.body = body instanceof FormData ? body : JSON.stringify(body);
   }
 
-  if (cache) {
-    config.cache = cache;
+  if (cache) config.cache = cache;
+  if (nextOptions) config.next = nextOptions;
+
+  const url = endpoint.startsWith('http')
+    ? endpoint
+    : `${BASE_URL}${endpoint}`;
+
+  let response;
+  try {
+    response = await fetch(url, config);
+  } catch (_networkError) {
+    throw new ApiError(
+      'Network error — please check your connection.',
+      0,
+      null
+    );
   }
 
-  if (nextOptions) {
-    config.next = nextOptions;
-  }
-
-  const url = endpoint.startsWith('http') ? endpoint : `${BASE_URL}${endpoint}`;
-
-  const response = await fetch(url, config);
-
-  if (response.status === 401 && !isRetry) {
+  // ─── Handle 401 with token refresh ───
+  if (response.status === 401 && !isRetry && !isServer) {
     if (!isRefreshing) {
       isRefreshing = true;
-
       try {
         await refreshAccessToken();
         isRefreshing = false;
@@ -126,22 +139,37 @@ async function request(endpoint, options = {}) {
   }
 
   if (!response.ok) {
-    const message =
-      typeof data === 'object' && data !== null
-        ? data.detail || data.message || JSON.stringify(data)
-        : data || `Request failed with status ${response.status}`;
+    // Extract error from backend envelope format
+    let message = `Request failed with status ${response.status}`;
+    let errors = null;
 
-    throw new ApiError(message, response.status, data);
+    if (typeof data === 'object' && data !== null) {
+      // Backend error envelope: { status: 'error', message: '...', errors: {...} }
+      if (data.message) message = data.message;
+      else if (data.detail) message = data.detail;
+      else message = JSON.stringify(data);
+
+      if (data.errors) errors = data.errors;
+    }
+
+    throw new ApiError(message, response.status, { message, errors, raw: data });
   }
 
-  // Unwrap the backend's custom response envelope if present
-  if (data && typeof data === 'object' && data.status === 'success' && data.data !== undefined) {
+  // ─── Unwrap backend success envelope ───
+  // Backend wraps ALL success responses: { status: 'success', data: <payload>, message: null }
+  if (
+    data &&
+    typeof data === 'object' &&
+    data.status === 'success' &&
+    data.data !== undefined
+  ) {
     return data.data;
   }
 
   return data;
 }
 
+// ─── Public API helpers ───
 export function apiGet(endpoint, options = {}) {
   return request(endpoint, { ...options, method: 'GET' });
 }
@@ -161,6 +189,3 @@ export function apiPatch(endpoint, body, options = {}) {
 export function apiDelete(endpoint, options = {}) {
   return request(endpoint, { ...options, method: 'DELETE' });
 }
-
-export { ApiError };
-export default request;

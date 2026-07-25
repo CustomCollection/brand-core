@@ -31,10 +31,22 @@ class CreatePaymentView(APIView):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-        payment_data = create_payment(
-            order=order,
-            payment_method=serializer.validated_data["payment_method"],
-        )
+        try:
+            payment_data = create_payment(
+                order=order,
+                payment_method=serializer.validated_data["payment_method"],
+            )
+        except Exception as exc:
+            import logging
+            logging.getLogger(__name__).error(
+                "Payment creation failed for order %s: %s",
+                order.order_number,
+                exc,
+            )
+            return Response(
+                {"message": f"Payment gateway error: {exc}"},
+                status=status.HTTP_502_BAD_GATEWAY,
+            )
 
         return Response(payment_data, status=status.HTTP_201_CREATED)
 

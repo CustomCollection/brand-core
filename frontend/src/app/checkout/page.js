@@ -1,373 +1,351 @@
-/* eslint-disable @next/next/no-img-element */
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Image from 'next/image';
 import Script from 'next/script';
+import { ArrowLeft, MapPin, CreditCard, Truck, ShieldCheck } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
+import { useToast } from '@/components/ui/Toast';
 import { apiGet, apiPost } from '@/lib/api';
 import { ENDPOINTS } from '@/lib/endpoints';
+import { formatPrice } from '@/lib/utils';
+import { PAYMENT_METHODS, FREE_SHIPPING_THRESHOLD, SHIPPING_CHARGE } from '@/lib/constants';
 import Button from '@/components/ui/Button';
 import Spinner from '@/components/ui/Spinner';
-import { CreditCard, Truck, MapPin, CheckCircle } from 'lucide-react';
 
 export default function CheckoutPage() {
+  const { user, isLoading: authLoading } = useAuth();
+  const { cart, clearCart } = useCart();
+  const toast = useToast();
   const router = useRouter();
-  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
-  const { items, total, isLoading: cartLoading, clearCart } = useCart();
-  
+
   const [addresses, setAddresses] = useState([]);
   const [selectedAddressId, setSelectedAddressId] = useState(null);
-  const [paymentMethod, setPaymentMethod] = useState('RAZORPAY'); // 'RAZORPAY' or 'COD'
-  
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState(PAYMENT_METHODS.cod);
+  const [isPlacing, setIsPlacing] = useState(false);
+  const [loadingAddresses, setLoadingAddresses] = useState(true);
 
+  const items = cart?.items || [];
+  const subtotal = parseFloat(cart?.subtotal || 0);
+  const shippingFree = subtotal >= FREE_SHIPPING_THRESHOLD;
+  const shipping = shippingFree ? 0 : (items.length > 0 ? SHIPPING_CHARGE : 0);
+  const total = subtotal + shipping;
+
+  // Redirect to login if not authenticated
   useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
+    if (!authLoading && !user) {
       router.push('/login?redirect=/checkout');
     }
-  }, [authLoading, isAuthenticated, router]);
+  }, [user, authLoading, router]);
 
+  // Fetch addresses
   useEffect(() => {
-    async function fetchAddresses() {
+    if (!user) return;
+    const fetchAddresses = async () => {
       try {
         const data = await apiGet(ENDPOINTS.AUTH.ADDRESSES);
-        // Assuming data is an array of addresses
-        setAddresses(data.results || data || []);
-        if (data.results && data.results.length > 0) {
-          setSelectedAddressId(data.results[0].id);
-        } else if (Array.isArray(data) && data.length > 0) {
-          setSelectedAddressId(data[0].id);
-        }
-      } catch (err) {
-        console.error('Failed to fetch addresses:', err);
+        const list = data?.results || (Array.isArray(data) ? data : []);
+        setAddresses(list);
+        const def = list.find((a) => a.is_default);
+        if (def) setSelectedAddressId(def.id);
+        else if (list.length > 0) setSelectedAddressId(list[0].id);
+      } catch {
+        setAddresses([]);
+      } finally {
+        setLoadingAddresses(false);
       }
-    }
-    if (isAuthenticated) {
-      fetchAddresses();
-    }
-  }, [isAuthenticated]);
+    };
+    fetchAddresses();
+  }, [user]);
 
-  if (authLoading || cartLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Spinner size="lg" />
-      </div>
-    );
-  }
-
-  if (items.length === 0 && !success) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Your cart is empty</h2>
-        <Button onClick={() => router.push('/')}>Continue Shopping</Button>
-      </div>
-    );
-  }
-
-  if (success) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-6">
-        <div className="bg-white p-10 rounded-2xl shadow-xl max-w-md w-full text-center">
-          <CheckCircle className="w-20 h-20 text-green-500 mx-auto mb-6" />
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Order Confirmed!</h2>
-          <p className="text-gray-600 mb-8">Thank you for your purchase. Your order has been placed successfully.</p>
-          <Button onClick={() => router.push('/orders')} className="w-full">
-            View Orders
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  const handleCheckout = async () => {
+  const handlePlaceOrder = async () => {
     if (!selectedAddressId) {
-      setError('Please select a shipping address.');
+      toast.warning('Please select a delivery address.');
+      return;
+    }
+    if (items.length === 0) {
+      toast.warning('Your cart is empty.');
       return;
     }
 
-    setLoading(true);
-    setError(null);
-
+    setIsPlacing(true);
     try {
-      // 1. Create Order
-      const orderRes = await apiPost(ENDPOINTS.CHECKOUT, {
+      // Step 1: Create order
+      const orderData = await apiPost(ENDPOINTS.ORDERS.CHECKOUT, {
         address_id: selectedAddressId,
         payment_method: paymentMethod,
       });
 
-      const order = orderRes.order;
+      const order = orderData?.order || orderData;
 
-      if (paymentMethod === 'COD') {
+      if (paymentMethod === PAYMENT_METHODS.razorpay) {
+        // Step 2a: Create Razorpay payment order
+        const paymentData = await apiPost(ENDPOINTS.PAYMENTS.CREATE_ORDER, {
+          order_number: order.order_number,
+          payment_method: PAYMENT_METHODS.razorpay,
+        });
+
+        const razorpay = new window.Razorpay({
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+          amount: paymentData.amount,
+          currency: paymentData.currency || 'INR',
+          name: 'CustomCollection',
+          description: `Order ${order.order_number}`,
+          order_id: paymentData.razorpay_order_id,
+          handler: async (response) => {
+            try {
+              await apiPost(ENDPOINTS.PAYMENTS.VERIFY, {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+              });
+              await clearCart();
+              toast.success('Payment successful! Order placed.');
+              router.push(`/checkout/success?order=${order.order_number}`);
+            } catch {
+              toast.error('Payment verification failed. Contact support.');
+            }
+          },
+          prefill: {
+            name: user?.full_name || `${user?.first_name} ${user?.last_name}`,
+            email: user?.email,
+          },
+          theme: { color: '#C9A96E' },
+        });
+        razorpay.open();
+      } else {
+        // Step 2b: COD
         await clearCart();
-        setSuccess(true);
-        return;
+        toast.success('Order placed successfully!');
+        router.push(`/checkout/success?order=${order.order_number}`);
       }
-
-      // 2. Create Payment (Razorpay)
-      const paymentRes = await apiPost(ENDPOINTS.PAYMENTS.CREATE_ORDER, {
-        order_number: order.order_number,
-        payment_method: 'RAZORPAY',
-      });
-
-      // 3. Open Razorpay Checkout
-      const options = {
-        key: paymentRes.key_id, // Replace with your Razorpay Key ID in production if needed, or get from backend
-        amount: paymentRes.amount,
-        currency: paymentRes.currency || 'INR',
-        name: 'Brand Core',
-        description: `Order ${order.order_number}`,
-        order_id: paymentRes.razorpay_order_id,
-        handler: async function (response) {
-          try {
-            await apiPost(ENDPOINTS.PAYMENTS.VERIFY, {
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-            });
-            await clearCart();
-            setSuccess(true);
-          } catch {
-            setError('Payment verification failed. Please contact support.');
-          }
-        },
-        prefill: {
-          name: user?.first_name ? `${user.first_name} ${user.last_name}` : '',
-          email: user?.email || '',
-        },
-        theme: {
-          color: '#111827', // Gray-900
-        },
-      };
-
-      const rzp1 = new window.Razorpay(options);
-      rzp1.on('payment.failed', function (response) {
-        setError(response.error.description || 'Payment failed.');
-      });
-      rzp1.open();
     } catch (err) {
-      console.error(err);
-      setError(err.message || 'Checkout failed. Please try again.');
+      toast.error(err.message || 'Failed to place order. Please try again.');
     } finally {
-      setLoading(false);
+      setIsPlacing(false);
     }
   };
 
-  return (
-    <div className="min-h-screen bg-gray-50 py-12">
-      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-10">Checkout</h1>
+  if (authLoading || loadingAddresses) {
+    return (
+      <div className='flex min-h-screen items-center justify-center'>
+        <Spinner size='lg' className='text-accent' />
+      </div>
+    );
+  }
 
-        <div className="lg:grid lg:grid-cols-12 lg:gap-x-12 lg:items-start">
-          <div className="lg:col-span-7 space-y-8">
-            
-            {/* Shipping Address */}
-            <div className="bg-white shadow-sm sm:rounded-xl p-6 border border-gray-100">
-              <h2 className="text-xl font-medium text-gray-900 flex items-center mb-6">
-                <MapPin className="w-5 h-5 mr-2 text-gray-500" />
-                Shipping Address
+  return (
+    <div className='bg-background pt-16'>
+      {/* Razorpay SDK */}
+      <Script src='https://checkout.razorpay.com/v1/checkout.js' strategy='lazyOnload' />
+
+      <div className='mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8'>
+        <div className='flex items-center gap-4 mb-10'>
+          <Link
+            href='/cart'
+            className='flex items-center gap-1.5 text-xs text-text-secondary hover:text-primary transition-colors'
+          >
+            <ArrowLeft size={14} /> Back to Cart
+          </Link>
+          <h1 className='text-3xl font-light uppercase tracking-widest text-text-primary'>Checkout</h1>
+        </div>
+
+        <div className='grid grid-cols-1 gap-10 lg:grid-cols-3'>
+          {/* Left — Delivery + Payment */}
+          <div className='lg:col-span-2 space-y-8'>
+            {/* Delivery address */}
+            <section className='border border-border p-6'>
+              <h2 className='text-sm font-semibold uppercase tracking-widest text-text-primary flex items-center gap-2 mb-6'>
+                <MapPin size={14} className='text-accent' /> Delivery Address
               </h2>
+
               {addresses.length === 0 ? (
-                <div className="text-sm text-gray-500">
-                  No addresses found. Please add an address in your profile first.
-                  <Button 
-                    variant="outline" 
-                    className="mt-4 block" 
-                    onClick={() => router.push('/profile')}
+                <div className='text-center py-6'>
+                  <p className='text-sm text-text-muted mb-4'>No saved addresses.</p>
+                  <Link
+                    href='/account/addresses'
+                    className='text-xs font-semibold uppercase tracking-widest text-accent hover:underline'
                   >
-                    Add Address
-                  </Button>
+                    Add an Address
+                  </Link>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {addresses.map((address) => (
+                <div className='space-y-3'>
+                  {addresses.map((addr) => (
                     <label
-                      key={address.id}
-                      className={`relative flex cursor-pointer rounded-lg border p-4 shadow-sm focus:outline-none ${
-                        selectedAddressId === address.id
-                          ? 'border-gray-900 ring-1 ring-gray-900 bg-gray-50'
-                          : 'border-gray-300 bg-white hover:bg-gray-50'
+                      key={addr.id}
+                      className={`flex items-start gap-4 p-4 border cursor-pointer transition-colors ${
+                        selectedAddressId === addr.id
+                          ? 'border-accent bg-surface'
+                          : 'border-border hover:border-accent/50'
                       }`}
                     >
                       <input
-                        type="radio"
-                        name="address"
-                        value={address.id}
-                        className="sr-only"
-                        checked={selectedAddressId === address.id}
-                        onChange={() => setSelectedAddressId(address.id)}
+                        type='radio'
+                        name='address'
+                        value={addr.id}
+                        checked={selectedAddressId === addr.id}
+                        onChange={() => setSelectedAddressId(addr.id)}
+                        className='mt-0.5 accent-accent'
                       />
-                      <span className="flex flex-1">
-                        <span className="flex flex-col">
-                          <span className="block text-sm font-medium text-gray-900">
-                            {address.full_name || user?.first_name}
-                          </span>
-                          <span className="mt-1 flex items-center text-sm text-gray-500">
-                            {address.address_line1}, {address.city}, {address.state} {address.postal_code}
-                          </span>
-                          <span className="mt-1 text-sm text-gray-500">
-                            {address.phone_number}
-                          </span>
-                        </span>
-                      </span>
-                      <CheckCircle
-                        className={`h-5 w-5 text-gray-900 ${
-                          selectedAddressId === address.id ? 'block' : 'hidden'
-                        }`}
-                        aria-hidden="true"
-                      />
+                      <div>
+                        <p className='text-sm font-medium text-text-primary'>
+                          {addr.full_name}
+                          {addr.is_default && (
+                            <span className='ml-2 text-[10px] font-semibold uppercase tracking-wider text-accent border border-accent px-1.5 py-0.5'>
+                              Default
+                            </span>
+                          )}
+                        </p>
+                        <p className='text-xs text-text-secondary mt-0.5'>{addr.phone}</p>
+                        <p className='text-xs text-text-secondary mt-1 leading-relaxed'>
+                          {addr.address_line_1}{addr.address_line_2 && `, ${addr.address_line_2}`},{' '}
+                          {addr.city}, {addr.state} — {addr.pincode}
+                        </p>
+                      </div>
                     </label>
                   ))}
+                  <Link
+                    href='/account/addresses'
+                    className='block text-xs font-semibold uppercase tracking-widest text-text-secondary hover:text-accent transition-colors pt-2'
+                  >
+                    + Manage Addresses
+                  </Link>
                 </div>
               )}
-            </div>
+            </section>
 
-            {/* Payment Method */}
-            <div className="bg-white shadow-sm sm:rounded-xl p-6 border border-gray-100">
-              <h2 className="text-xl font-medium text-gray-900 flex items-center mb-6">
-                <CreditCard className="w-5 h-5 mr-2 text-gray-500" />
-                Payment Method
+            {/* Payment method */}
+            <section className='border border-border p-6'>
+              <h2 className='text-sm font-semibold uppercase tracking-widest text-text-primary flex items-center gap-2 mb-6'>
+                <CreditCard size={14} className='text-accent' /> Payment Method
               </h2>
-              <div className="space-y-4">
+
+              <div className='space-y-3'>
                 <label
-                  className={`relative flex cursor-pointer rounded-lg border p-4 shadow-sm focus:outline-none ${
-                    paymentMethod === 'RAZORPAY'
-                      ? 'border-gray-900 ring-1 ring-gray-900 bg-gray-50'
-                      : 'border-gray-300 bg-white hover:bg-gray-50'
+                  className={`flex items-center gap-4 p-4 border cursor-pointer transition-colors ${
+                    paymentMethod === PAYMENT_METHODS.cod
+                      ? 'border-accent bg-surface'
+                      : 'border-border hover:border-accent/50'
                   }`}
                 >
                   <input
-                    type="radio"
-                    name="payment_method"
-                    value="RAZORPAY"
-                    className="sr-only"
-                    checked={paymentMethod === 'RAZORPAY'}
-                    onChange={() => setPaymentMethod('RAZORPAY')}
+                    type='radio'
+                    name='payment'
+                    value={PAYMENT_METHODS.cod}
+                    checked={paymentMethod === PAYMENT_METHODS.cod}
+                    onChange={() => setPaymentMethod(PAYMENT_METHODS.cod)}
+                    className='accent-accent'
                   />
-                  <span className="flex flex-1 items-center">
-                    <CreditCard className="w-6 h-6 text-gray-400 mr-4" />
-                    <span className="flex flex-col">
-                      <span className="block text-sm font-medium text-gray-900">
-                        Pay Online
-                      </span>
-                      <span className="mt-1 text-sm text-gray-500">
-                        Cards, UPI, NetBanking via Razorpay
-                      </span>
-                    </span>
-                  </span>
-                  <CheckCircle
-                    className={`h-5 w-5 text-gray-900 ${
-                      paymentMethod === 'RAZORPAY' ? 'block' : 'hidden'
-                    }`}
-                    aria-hidden="true"
-                  />
+                  <div>
+                    <p className='text-sm font-medium text-text-primary'>Cash on Delivery (COD)</p>
+                    <p className='text-xs text-text-muted mt-0.5'>Pay when your order arrives.</p>
+                  </div>
                 </label>
 
                 <label
-                  className={`relative flex cursor-pointer rounded-lg border p-4 shadow-sm focus:outline-none ${
-                    paymentMethod === 'COD'
-                      ? 'border-gray-900 ring-1 ring-gray-900 bg-gray-50'
-                      : 'border-gray-300 bg-white hover:bg-gray-50'
+                  className={`flex items-center gap-4 p-4 border cursor-pointer transition-colors ${
+                    paymentMethod === PAYMENT_METHODS.razorpay
+                      ? 'border-accent bg-surface'
+                      : 'border-border hover:border-accent/50'
                   }`}
                 >
                   <input
-                    type="radio"
-                    name="payment_method"
-                    value="COD"
-                    className="sr-only"
-                    checked={paymentMethod === 'COD'}
-                    onChange={() => setPaymentMethod('COD')}
+                    type='radio'
+                    name='payment'
+                    value={PAYMENT_METHODS.razorpay}
+                    checked={paymentMethod === PAYMENT_METHODS.razorpay}
+                    onChange={() => setPaymentMethod(PAYMENT_METHODS.razorpay)}
+                    className='accent-accent'
                   />
-                  <span className="flex flex-1 items-center">
-                    <Truck className="w-6 h-6 text-gray-400 mr-4" />
-                    <span className="flex flex-col">
-                      <span className="block text-sm font-medium text-gray-900">
-                        Cash on Delivery
-                      </span>
-                      <span className="mt-1 text-sm text-gray-500">
-                        Pay when your order arrives
-                      </span>
-                    </span>
-                  </span>
-                  <CheckCircle
-                    className={`h-5 w-5 text-gray-900 ${
-                      paymentMethod === 'COD' ? 'block' : 'hidden'
-                    }`}
-                    aria-hidden="true"
-                  />
+                  <div>
+                    <p className='text-sm font-medium text-text-primary'>Online Payment (Razorpay)</p>
+                    <p className='text-xs text-text-muted mt-0.5'>UPI, Cards, Net Banking, Wallets.</p>
+                  </div>
                 </label>
+              </div>
+            </section>
+
+            {/* Trust signals */}
+            <div className='flex flex-wrap gap-6 text-xs text-text-muted'>
+              <div className='flex items-center gap-1.5'>
+                <ShieldCheck size={14} className='text-accent' />
+                Secure checkout
+              </div>
+              <div className='flex items-center gap-1.5'>
+                <Truck size={14} className='text-accent' />
+                Fast delivery
               </div>
             </div>
           </div>
 
-          {/* Order Summary */}
-          <div className="lg:col-span-5 mt-10 lg:mt-0">
-            <div className="bg-white shadow-sm sm:rounded-xl p-6 border border-gray-100 sticky top-24">
-              <h2 className="text-xl font-medium text-gray-900 mb-6">Order Summary</h2>
-              
-              <div className="flow-root mb-6">
-                <ul className="-my-4 divide-y divide-gray-200">
-                  {items.map((item) => (
-                    <li key={item.id} className="flex items-center py-4">
-                      <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded border border-gray-200 bg-gray-50">
-                        <img
-                          src={item.product_image || (item.product && item.product.image) || '/placeholder.jpg'}
-                          alt={item.product_name || (item.product && item.product.name)}
-                          className="h-full w-full object-cover object-center"
-                        />
-                      </div>
-                      <div className="ml-4 flex flex-1 flex-col">
-                        <div>
-                          <div className="flex justify-between text-sm font-medium text-gray-900">
-                            <h3 className="line-clamp-1">{item.product_name || (item.product && item.product.name)}</h3>
-                            <p className="ml-4 whitespace-nowrap">₹{(item.discount_price || item.price || 0).toLocaleString()}</p>
-                          </div>
-                          <p className="mt-1 text-xs text-gray-500">
-                            Qty: {item.quantity} 
-                            {item.color_name && ` | Color: ${item.color_name}`}
-                            {item.size_name && ` | Size: ${item.size_name}`}
-                          </p>
-                        </div>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              
-              <dl className="space-y-4 border-t border-gray-200 pt-6 text-sm">
-                <div className="flex items-center justify-between">
-                  <dt className="text-gray-600">Subtotal</dt>
-                  <dd className="font-medium text-gray-900">₹{total.toLocaleString()}</dd>
-                </div>
-                <div className="flex items-center justify-between">
-                  <dt className="text-gray-600">Shipping</dt>
-                  <dd className="font-medium text-gray-900">Free</dd>
-                </div>
-                <div className="flex items-center justify-between border-t border-gray-200 pt-4 text-lg">
-                  <dt className="font-medium text-gray-900">Total</dt>
-                  <dd className="font-bold text-gray-900">₹{total.toLocaleString()}</dd>
-                </div>
-              </dl>
+          {/* Right — Order summary */}
+          <div className='lg:col-span-1'>
+            <div className='sticky top-24 border border-border p-6 space-y-5'>
+              <h2 className='text-sm font-semibold uppercase tracking-widest text-text-primary'>Order Summary</h2>
 
-              {error && (
-                <div className="mt-6 bg-red-50 text-red-700 p-4 rounded-md text-sm border border-red-100">
-                  {error}
+              {/* Items */}
+              <ul className='divide-y divide-border'>
+                {items.map((item) => (
+                  <li key={item.id} className='flex gap-3 py-3'>
+                    <div className='relative h-14 w-11 flex-shrink-0 bg-surface overflow-hidden'>
+                      {item.product_image && (
+                        <Image
+                          src={item.product_image}
+                          alt={item.product_name}
+                          fill
+                          sizes='44px'
+                          className='object-cover'
+                        />
+                      )}
+                    </div>
+                    <div className='flex-1 min-w-0'>
+                      <p className='text-xs font-medium text-text-primary truncate'>{item.product_name}</p>
+                      <p className='text-xs text-text-muted'>
+                        {item.size?.name || item.size} / {item.color?.name || item.color} × {item.quantity}
+                      </p>
+                    </div>
+                    <p className='text-xs font-semibold text-text-primary flex-shrink-0'>
+                      {formatPrice(item.line_total || item.effective_price)}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+
+              {/* Totals */}
+              <div className='space-y-2 border-t border-border pt-4'>
+                <div className='flex justify-between text-sm text-text-secondary'>
+                  <span>Subtotal</span>
+                  <span>{formatPrice(subtotal)}</span>
                 </div>
-              )}
+                <div className='flex justify-between text-sm text-text-secondary'>
+                  <span>Shipping</span>
+                  <span className={shippingFree ? 'text-success font-medium' : ''}>
+                    {shippingFree ? 'Free' : formatPrice(shipping)}
+                  </span>
+                </div>
+                <div className='flex justify-between font-semibold text-text-primary border-t border-border pt-2'>
+                  <span>Total</span>
+                  <span className='text-lg'>{formatPrice(total)}</span>
+                </div>
+              </div>
 
               <Button
-                onClick={handleCheckout}
-                disabled={loading || !selectedAddressId}
-                className="w-full mt-6 py-6 text-lg rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                fullWidth
+                size='lg'
+                onClick={handlePlaceOrder}
+                isLoading={isPlacing}
+                disabled={items.length === 0 || !selectedAddressId}
               >
-                {loading ? <Spinner size="sm" className="text-white mr-2" /> : null}
-                {paymentMethod === 'RAZORPAY' ? 'Pay Now' : 'Place Order'}
+                {paymentMethod === PAYMENT_METHODS.cod ? 'Place Order' : 'Pay Now'}
               </Button>
+
+              <p className='text-xs text-center text-text-muted'>
+                By placing your order you agree to our terms of service.
+              </p>
             </div>
           </div>
         </div>

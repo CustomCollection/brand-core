@@ -1,5 +1,5 @@
 import { Inter } from 'next/font/google';
-import '@/app/globals.css';
+import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 import { CartProvider } from '@/context/CartContext';
 import { WishlistProvider } from '@/context/WishlistContext';
@@ -7,59 +7,66 @@ import { ToastProvider } from '@/components/ui/Toast';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import CartDrawer from '@/components/cart/CartDrawer';
+import { apiGet } from '@/lib/api';
+import { ENDPOINTS } from '@/lib/endpoints';
+import AnnouncementBar from '@/components/layout/AnnouncementBar';
 
-const inter = Inter({
-  subsets: ['latin'],
-  display: 'swap',
-  variable: '--font-inter',
-});
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+
+async function getAnnouncement() {
+  try {
+    const data = await apiGet(ENDPOINTS.CMS.HOMEPAGE, {
+      next: { revalidate: 300 },
+    });
+    const active = (data?.announcements || []).find((a) => a.text);
+    return active || null;
+  } catch {
+    return null;
+  }
+}
 
 export const metadata = {
   title: {
-    default: 'CustomCollection — Premium Fashion, Redefined',
+    default: 'CustomCollection — Premium Clothing Brand',
     template: '%s | CustomCollection',
   },
   description:
-    'Discover premium, curated fashion at CustomCollection. Shop the finest clothing designed for the modern individual.',
-  keywords: ['fashion', 'premium clothing', 'designer wear', 'custom collection', 'online shopping'],
-  authors: [{ name: 'CustomCollection' }],
+    'Shop premium quality clothing at CustomCollection. Discover our exclusive collections of oversized tees, hoodies, and more.',
+  keywords: ['clothing', 'fashion', 'premium', 'tshirts', 'hoodies', 'CustomCollection'],
   openGraph: {
     type: 'website',
     locale: 'en_IN',
     siteName: 'CustomCollection',
-    title: 'CustomCollection — Premium Fashion, Redefined',
-    description:
-      'Discover premium, curated fashion at CustomCollection. Shop the finest clothing designed for the modern individual.',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'CustomCollection — Premium Fashion, Redefined',
-    description:
-      'Discover premium, curated fashion at CustomCollection.',
-  },
-  robots: {
-    index: true,
-    follow: true,
   },
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const announcement = await getAnnouncement();
+
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="min-h-screen bg-background font-sans antialiased flex flex-col">
+    <html lang='en' className={inter.variable}>
+      <head>
+        <link rel='preconnect' href='https://fonts.googleapis.com' />
+        <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='anonymous' />
+      </head>
+      <body className='font-sans antialiased'>
         <AuthProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <ToastProvider>
+          <ToastProvider>
+            <CartProvider>
+              <WishlistProvider>
+                {announcement && (
+                  <AnnouncementBar
+                    text={announcement.text}
+                    linkUrl={announcement.link_url}
+                  />
+                )}
                 <Header />
-                <div className="flex-1">
-                  {children}
-                </div>
+                <main className='min-h-screen'>{children}</main>
                 <Footer />
                 <CartDrawer />
-              </ToastProvider>
-            </WishlistProvider>
-          </CartProvider>
+              </WishlistProvider>
+            </CartProvider>
+          </ToastProvider>
         </AuthProvider>
       </body>
     </html>
