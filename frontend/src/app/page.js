@@ -32,58 +32,32 @@ export default async function HomePage() {
   return (
     <div className='bg-background'>
       {/* ─── HERO ─── */}
-      <section className='relative flex min-h-screen items-end overflow-hidden bg-primary'>
+      <section className='relative flex min-h-[calc(100vh-4rem)] items-center justify-center overflow-hidden bg-primary mt-16'>
         {banner?.image_url ? (
-          <Image
-            src={banner.image_url}
-            alt={banner.title || 'Hero'}
-            fill
-            priority
-            className='object-cover opacity-50'
-            sizes='100vw'
-          />
+          banner.link_url ? (
+            <Link href={banner.link_url} className='absolute inset-0 block w-full h-full'>
+              <Image
+                src={banner.image_url}
+                alt={banner.title || 'Hero Banner'}
+                fill
+                priority
+                className='object-cover'
+                sizes='100vw'
+              />
+            </Link>
+          ) : (
+            <Image
+              src={banner.image_url}
+              alt={banner.title || 'Hero Banner'}
+              fill
+              priority
+              className='object-cover'
+              sizes='100vw'
+            />
+          )
         ) : (
-          <div className='absolute inset-0 bg-gradient-to-br from-primary via-primary to-text-primary' />
+          <div className='absolute inset-0 bg-primary' />
         )}
-
-        {/* Decorative grain */}
-        <div className='absolute inset-0 opacity-[0.03] bg-[url("data:image/svg+xml,%3Csvg viewBox%3D%270 0 256 256%27 xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27%3E%3Cfilter id%3D%27noise%27%3E%3CfeTurbulence type%3D%27fractalNoise%27 baseFrequency%3D%270.9%27 numOctaves%3D%274%27 stitchTiles%3D%27stitch%27%2F%3E%3C%2Ffilter%3E%3Crect width%3D%27100%25%27 height%3D%27100%25%27 filter%3D%27url(%23noise)%27%2F%3E%3C%2Fsvg%3E")]' />
-
-        <div className='relative z-10 mx-auto max-w-7xl w-full px-6 pb-24 sm:px-8 lg:px-12'>
-          <div className='max-w-2xl animate-fade-in-up'>
-            <p className='text-xs font-semibold uppercase tracking-[0.3em] text-accent mb-6'>
-              New Collection
-            </p>
-            <h1 className='text-5xl sm:text-6xl lg:text-7xl font-light uppercase tracking-wider text-background leading-none'>
-              {banner?.title || 'Wear the Difference'}
-            </h1>
-            <p className='mt-6 text-base sm:text-lg text-background/70 leading-relaxed max-w-lg'>
-              {banner?.subtitle ||
-                'Premium quality clothing crafted for those who dare to stand out. Every piece tells a story.'}
-            </p>
-            <div className='mt-10 flex flex-wrap gap-4'>
-              <Link
-                href='/products'
-                className='inline-flex items-center gap-2 bg-accent text-background px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:bg-accent-dark transition-colors'
-              >
-                Shop Now
-                <ArrowRight size={14} />
-              </Link>
-              <Link
-                href='/collections'
-                className='inline-flex items-center gap-2 border border-background/40 text-background px-8 py-4 text-xs font-semibold uppercase tracking-widest hover:border-background transition-colors'
-              >
-                View Collections
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Scroll indicator */}
-        <div className='absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 animate-bounce'>
-          <span className='text-[10px] font-medium uppercase tracking-[0.3em] text-background/50'>Scroll</span>
-          <div className='h-8 w-px bg-background/30' />
-        </div>
       </section>
 
       {/* ─── MARQUEE STRIP ─── */}

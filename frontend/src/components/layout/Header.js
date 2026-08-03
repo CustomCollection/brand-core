@@ -85,7 +85,7 @@ export default function Header() {
     setIsAccountOpen(false);
   };
 
-  const transparent = isHomepage && !isScrolled;
+  const transparent = false;
 
   return (
     <>
