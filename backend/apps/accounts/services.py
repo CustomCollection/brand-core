@@ -185,15 +185,18 @@ def send_password_reset_email(email):
         {"user": user, "reset_link": reset_link},
     )
 
-    send_mail(
-        subject="Reset Your Password — CustomCollection",
-        message=strip_tags(html_message),
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[user.email],
-        html_message=html_message,
-        fail_silently=False,
-    )
-    logger.info("Password reset email sent to: %s", user.email)
+    try:
+        send_mail(
+            subject="Reset Your Password — CustomCollection",
+            message=strip_tags(html_message),
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email],
+            html_message=html_message,
+            fail_silently=False,
+        )
+        logger.info("Password reset email sent to: %s", user.email)
+    except Exception as exc:
+        logger.error("Failed to send password reset email to %s: %s", user.email, exc)
 
 
 def reset_password(uid, token, new_password):
@@ -382,15 +385,18 @@ def send_verification_email(user):
         {"user": user, "verification_link": verification_link},
     )
 
-    send_mail(
-        subject="Verify Your Email — CustomCollection",
-        message=strip_tags(html_message),
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[user.email],
-        html_message=html_message,
-        fail_silently=False,
-    )
-    logger.info("Verification email sent to: %s", user.email)
+    try:
+        send_mail(
+            subject="Verify Your Email — CustomCollection",
+            message=strip_tags(html_message),
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email],
+            html_message=html_message,
+            fail_silently=False,
+        )
+        logger.info("Verification email sent to: %s", user.email)
+    except Exception as exc:
+        logger.error("Failed to send verification email to %s: %s", user.email, exc)
 
 
 def send_welcome_email(user):
@@ -408,12 +414,15 @@ def send_welcome_email(user):
         },
     )
 
-    send_mail(
-        subject="Welcome to CustomCollection!",
-        message=strip_tags(html_message),
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[user.email],
-        html_message=html_message,
-        fail_silently=False,
-    )
-    logger.info("Welcome email sent to: %s", user.email)
+    try:
+        send_mail(
+            subject="Welcome to CustomCollection!",
+            message=strip_tags(html_message),
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email],
+            html_message=html_message,
+            fail_silently=False,
+        )
+        logger.info("Welcome email sent to: %s", user.email)
+    except Exception as exc:
+        logger.error("Failed to send welcome email to %s: %s", user.email, exc)

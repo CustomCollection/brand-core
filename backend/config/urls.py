@@ -17,6 +17,7 @@ def health_check(request):
 
 
 api_v1_patterns = [
+    path("health/", health_check, name="api-health-check"),
     path("accounts/", include("apps.accounts.urls")),
     path("products/", include("apps.products.urls")),
     path("collections/", include("apps.collections.urls")),

@@ -19,6 +19,7 @@ RUN apt-get update && \
         libpq-dev \
         gcc \
         netcat-openbsd \
+        curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
@@ -36,8 +37,8 @@ RUN addgroup --system appgroup && \
     chown -R appuser:appgroup /app
 
 # Copy and set permissions for entrypoint
-COPY entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh
+COPY entrypoint.sh /entrypoint.sh
+RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
 
 # Switch to non-root user
 USER appuser
@@ -46,4 +47,4 @@ USER appuser
 EXPOSE 8000
 
 # Run entrypoint
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
