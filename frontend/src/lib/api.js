@@ -1,19 +1,15 @@
 import { ENDPOINTS } from '@/lib/endpoints';
 
-// Determine if we are running on the server (SSR) or in the browser
-const isServer = typeof window === 'undefined';
-
 // Compute the base URL — on the server inside Docker, 'localhost' must be
 // replaced with the Docker service name 'backend' for container networking.
-function getBaseUrl() {
+export function getBaseUrl() {
+  const isServer = typeof window === 'undefined';
   const url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
   if (isServer && url.includes('localhost')) {
     return url.replace('localhost', 'backend');
   }
   return url;
 }
-
-const BASE_URL = getBaseUrl();
 
 // ─── Refresh token queue to batch concurrent 401s ───
 let isRefreshing = false;
@@ -28,9 +24,7 @@ function processRefreshQueue(error) {
 }
 
 async function refreshAccessToken() {
-  const refreshUrl = isServer
-    ? `${BASE_URL}${ENDPOINTS.AUTH.REFRESH_TOKEN}`
-    : `${getBaseUrl()}${ENDPOINTS.AUTH.REFRESH_TOKEN}`;
+  const refreshUrl = `${getBaseUrl()}${ENDPOINTS.AUTH.REFRESH_TOKEN}`;
 
   const response = await fetch(refreshUrl, {
     method: 'POST',
@@ -89,7 +83,7 @@ async function request(endpoint, options = {}) {
 
   const url = endpoint.startsWith('http')
     ? endpoint
-    : `${BASE_URL}${endpoint}`;
+    : `${getBaseUrl()}${endpoint}`;
 
   let response;
   try {

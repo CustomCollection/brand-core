@@ -1,9 +1,9 @@
-import Link from 'next/link';
-import Image from 'next/image';
+﻿import Link from 'next/link';
 import { ArrowRight, Star } from 'lucide-react';
 import { apiGet } from '@/lib/api';
 import { ENDPOINTS } from '@/lib/endpoints';
 import ProductCard from '@/components/product/ProductCard';
+import HeroSlider from '@/components/cms/HeroSlider';
 
 export const metadata = {
   title: 'Premium Clothing Brand — CustomCollection',
@@ -11,12 +11,12 @@ export const metadata = {
     'Discover premium quality clothing at CustomCollection. Shop exclusive collections of oversized tees, hoodies, and more.',
 };
 
-// Revalidate homepage every 60 seconds
-export const revalidate = 60;
+// Revalidate homepage every 10 seconds for real-time admin sync
+export const revalidate = 10;
 
 async function getHomepageData() {
   try {
-    return await apiGet(ENDPOINTS.CMS.HOMEPAGE, { next: { revalidate: 60 } });
+    return await apiGet(ENDPOINTS.CMS.HOMEPAGE, { next: { revalidate: 10 } });
   } catch {
     return null;
   }
@@ -24,41 +24,14 @@ async function getHomepageData() {
 
 export default async function HomePage() {
   const data = await getHomepageData();
+  const banners = data?.banners || [];
+  const sections = data?.sections || [];
   const featuredProducts = data?.featured_products || [];
-  const newArrivals = data?.new_arrivals || [];
-  const bestSellers = data?.best_sellers || [];
-  const banner = data?.banners?.[0] || null;
 
   return (
     <div className='bg-background'>
-      {/* ─── HERO ─── */}
-      <section className='relative flex min-h-[calc(100vh-4rem)] items-center justify-center overflow-hidden bg-primary mt-16'>
-        {banner?.image_url ? (
-          banner.link_url ? (
-            <Link href={banner.link_url} className='absolute inset-0 block w-full h-full'>
-              <Image
-                src={banner.image_url}
-                alt={banner.title || 'Hero Banner'}
-                fill
-                priority
-                className='object-cover'
-                sizes='100vw'
-              />
-            </Link>
-          ) : (
-            <Image
-              src={banner.image_url}
-              alt={banner.title || 'Hero Banner'}
-              fill
-              priority
-              className='object-cover'
-              sizes='100vw'
-            />
-          )
-        ) : (
-          <div className='absolute inset-0 bg-primary' />
-        )}
-      </section>
+      {/* ─── HERO BANNER SLIDER ─── */}
+      <HeroSlider banners={banners} />
 
       {/* ─── MARQUEE STRIP ─── */}
       <div className='overflow-hidden bg-accent py-3'>
@@ -71,32 +44,70 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* ─── FEATURED PRODUCTS ─── */}
-      {featuredProducts.length > 0 && (
-        <section className='mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8'>
-          <div className='flex items-end justify-between mb-10'>
-            <div>
-              <p className='text-xs font-semibold uppercase tracking-[0.3em] text-accent'>Curated for You</p>
-              <h2 className='mt-2 text-3xl font-light uppercase tracking-widest text-text-primary'>
-                Featured
-              </h2>
+      {/* ─── DYNAMIC HOMEPAGE SECTIONS (FROM CMS) ─── */}
+      {sections.length > 0 ? (
+        sections.map((section) => (
+          <section key={section.id} className='mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 border-b border-border/40 last:border-b-0'>
+            <div className='flex items-end justify-between mb-10'>
+              <div>
+                {section.subtitle && (
+                  <p className='text-xs font-semibold uppercase tracking-[0.3em] text-accent'>
+                    {section.subtitle}
+                  </p>
+                )}
+                <h2 className='mt-2 text-3xl font-light uppercase tracking-widest text-text-primary'>
+                  {section.title || section.collection_name}
+                </h2>
+              </div>
+              <Link
+                href={`/collections/${section.collection_slug}`}
+                className='text-xs font-semibold uppercase tracking-widest text-text-secondary hover:text-accent transition-colors link-underline'
+              >
+                View All <ArrowRight size={12} className='inline ml-1' />
+              </Link>
             </div>
-            <Link
-              href='/products?is_featured=true'
-              className='text-xs font-semibold uppercase tracking-widest text-text-secondary hover:text-accent transition-colors link-underline'
-            >
-              View All <ArrowRight size={12} className='inline ml-1' />
-            </Link>
-          </div>
-          <div className='grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
-            {featuredProducts.slice(0, 4).map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-        </section>
+
+            {section.products?.length > 0 ? (
+              <div className='grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+                {section.products.slice(0, 4).map((p) => (
+                  <ProductCard key={p.id} product={p} />
+                ))}
+              </div>
+            ) : (
+              <p className='text-sm text-text-muted py-8 text-center'>
+                No products found in this collection yet.
+              </p>
+            )}
+          </section>
+        ))
+      ) : (
+        /* Fallback if no sections have been added in admin yet */
+        featuredProducts.length > 0 && (
+          <section className='mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8'>
+            <div className='flex items-end justify-between mb-10'>
+              <div>
+                <p className='text-xs font-semibold uppercase tracking-[0.3em] text-accent'>Curated for You</p>
+                <h2 className='mt-2 text-3xl font-light uppercase tracking-widest text-text-primary'>
+                  Featured
+                </h2>
+              </div>
+              <Link
+                href='/collections'
+                className='text-xs font-semibold uppercase tracking-widest text-text-secondary hover:text-accent transition-colors link-underline'
+              >
+                View All <ArrowRight size={12} className='inline ml-1' />
+              </Link>
+            </div>
+            <div className='grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+              {featuredProducts.slice(0, 4).map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
+          </section>
+        )
       )}
 
-      {/* ─── BANNER CTA ─── */}
+      {/* ─── WHY CHOOSE US (KEPT AS REQUESTED) ─── */}
       <section className='relative overflow-hidden bg-surface'>
         <div className='mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8'>
           <div className='grid lg:grid-cols-2 gap-12 items-center'>
@@ -133,92 +144,14 @@ export default async function HomePage() {
                 <p className='text-6xl font-light text-accent'>100%</p>
                 <p className='text-sm font-semibold uppercase tracking-widest text-text-primary'>Premium Cotton</p>
                 <div className='flex justify-center mt-4 gap-1'>
-                  {[1,2,3,4,5].map((s) => <Star key={s} size={16} className='text-accent fill-accent' />)}
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <Star key={s} size={16} className='text-accent fill-accent' />
+                  ))}
                 </div>
                 <p className='text-xs text-text-muted'>Rated 5 stars by our community</p>
               </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* ─── NEW ARRIVALS ─── */}
-      {newArrivals.length > 0 && (
-        <section className='mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8'>
-          <div className='flex items-end justify-between mb-10'>
-            <div>
-              <p className='text-xs font-semibold uppercase tracking-[0.3em] text-accent'>Just Dropped</p>
-              <h2 className='mt-2 text-3xl font-light uppercase tracking-widest text-text-primary'>
-                New Arrivals
-              </h2>
-            </div>
-            <Link
-              href='/products?is_new_arrival=true'
-              className='text-xs font-semibold uppercase tracking-widest text-text-secondary hover:text-accent transition-colors link-underline'
-            >
-              View All <ArrowRight size={12} className='inline ml-1' />
-            </Link>
-          </div>
-          <div className='grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
-            {newArrivals.slice(0, 4).map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-        </section>
-      )}
-
-      {/* ─── BEST SELLERS ─── */}
-      {bestSellers.length > 0 && (
-        <section className='bg-surface'>
-          <div className='mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8'>
-            <div className='flex items-end justify-between mb-10'>
-              <div>
-                <p className='text-xs font-semibold uppercase tracking-[0.3em] text-accent'>Most Loved</p>
-                <h2 className='mt-2 text-3xl font-light uppercase tracking-widest text-text-primary'>
-                  Best Sellers
-                </h2>
-              </div>
-              <Link
-                href='/products?is_best_seller=true'
-                className='text-xs font-semibold uppercase tracking-widest text-text-secondary hover:text-accent transition-colors link-underline'
-              >
-                View All <ArrowRight size={12} className='inline ml-1' />
-              </Link>
-            </div>
-            <div className='grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
-              {bestSellers.slice(0, 4).map((p) => (
-                <ProductCard key={p.id} product={p} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ─── COLLECTIONS STRIP ─── */}
-      <section className='mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8'>
-        <div className='text-center mb-10'>
-          <p className='text-xs font-semibold uppercase tracking-[0.3em] text-accent'>Explore</p>
-          <h2 className='mt-2 text-3xl font-light uppercase tracking-widest text-text-primary'>Collections</h2>
-        </div>
-        <div className='grid grid-cols-2 gap-4 md:grid-cols-4'>
-          {[
-            { label: 'Men', href: '/products?collection=men', bg: 'bg-zinc-900' },
-            { label: 'Women', href: '/products?collection=women', bg: 'bg-stone-200' },
-            { label: 'New Arrivals', href: '/products?is_new_arrival=true', bg: 'bg-accent' },
-            { label: 'Oversized', href: '/products?collection=oversized', bg: 'bg-zinc-700' },
-          ].map((col) => (
-            <Link
-              key={col.href}
-              href={col.href}
-              className={`${col.bg} flex items-end p-6 aspect-square group relative overflow-hidden`}
-            >
-              <div className='absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors' />
-              <span className='relative text-xs font-semibold uppercase tracking-widest text-background flex items-center gap-2'>
-                {col.label}
-                <ArrowRight size={12} className='transition-transform group-hover:translate-x-1' />
-              </span>
-            </Link>
-          ))}
         </div>
       </section>
 

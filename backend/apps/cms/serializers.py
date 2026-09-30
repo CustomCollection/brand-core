@@ -2,7 +2,7 @@
 
 from rest_framework import serializers
 
-from .models import AnnouncementBar, HeroBanner, HomepageSection, SiteConfig
+from .models import AnnouncementBar, ContactMessage, HeroBanner, HomepageSection, SiteConfig
 
 
 class SiteConfigSerializer(serializers.ModelSerializer):
@@ -30,25 +30,52 @@ class SiteConfigSerializer(serializers.ModelSerializer):
 class HeroBannerSerializer(serializers.ModelSerializer):
     class Meta:
         model = HeroBanner
-        fields = ["id", "title", "subtitle", "image_url", "link_url", "link_text"]
+        fields = [
+            "id",
+            "title",
+            "subtitle",
+            "image_url",
+            "link_url",
+            "link_text",
+            "show_content",
+            "sort_order",
+        ]
 
 
 class HomepageSectionSerializer(serializers.ModelSerializer):
+    collection_name = serializers.CharField(source="collection.name", read_only=True)
+    collection_slug = serializers.CharField(source="collection.slug", read_only=True)
+    products = serializers.SerializerMethodField()
+
     class Meta:
         model = HomepageSection
         fields = [
             "id",
-            "section_type",
             "title",
             "subtitle",
-            "content",
-            "image_url",
-            "is_active",
+            "collection_id",
+            "collection_name",
+            "collection_slug",
             "sort_order",
+            "products",
         ]
+
+    def get_products(self, obj):
+        from apps.products.serializers import ProductListSerializer
+        products = obj.collection.products.filter(status="published").prefetch_related(
+            "images", "collections", "tags", "reviews"
+        )[:4]
+        return ProductListSerializer(products, many=True).data
 
 
 class AnnouncementBarSerializer(serializers.ModelSerializer):
     class Meta:
         model = AnnouncementBar
-        fields = ["id", "text", "link_url"]
+        fields = ["id", "text", "link_url", "sort_order"]
+
+
+class ContactMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactMessage
+        fields = ["id", "name", "email", "phone", "subject", "message", "created_at"]
+        read_only_fields = ["id", "created_at"]

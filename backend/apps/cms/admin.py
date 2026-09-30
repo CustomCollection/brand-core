@@ -9,7 +9,7 @@ contact details, and footer content — all without code changes.
 from django.contrib import admin
 from django.utils.html import format_html
 
-from .models import AnnouncementBar, HeroBanner, HomepageSection, SiteConfig
+from .models import AnnouncementBar, ContactMessage, HeroBanner, HomepageSection, SiteConfig
 
 
 @admin.register(SiteConfig)
@@ -48,9 +48,9 @@ class SiteConfigAdmin(admin.ModelAdmin):
 
 @admin.register(HeroBanner)
 class HeroBannerAdmin(admin.ModelAdmin):
-    list_display = ("title", "is_active", "sort_order", "image_preview", "created_at")
-    list_filter = ("is_active",)
-    list_editable = ("is_active", "sort_order")
+    list_display = ("title", "show_content", "is_active", "sort_order", "image_preview", "created_at")
+    list_filter = ("is_active", "show_content")
+    list_editable = ("show_content", "is_active", "sort_order")
     ordering = ("sort_order",)
 
     def image_preview(self, obj):
@@ -65,20 +65,26 @@ class HeroBannerAdmin(admin.ModelAdmin):
 
 @admin.register(HomepageSection)
 class HomepageSectionAdmin(admin.ModelAdmin):
-    list_display = ("section_type", "title", "is_active", "sort_order")
-    list_filter = ("is_active", "section_type")
+    list_display = ("title", "collection", "subtitle", "is_active", "sort_order")
+    list_filter = ("is_active", "collection")
     list_editable = ("is_active", "sort_order")
-    ordering = ("sort_order",)
-
-    fieldsets = (
-        (None, {"fields": ("section_type", "title", "subtitle")}),
-        ("Content", {"fields": ("content", "image_url"), "classes": ("collapse",)}),
-        ("Display", {"fields": ("is_active", "sort_order")}),
-    )
+    ordering = ("sort_order", "-created_at")
+    fields = ("collection", "title", "subtitle", "is_active", "sort_order")
 
 
 @admin.register(AnnouncementBar)
 class AnnouncementBarAdmin(admin.ModelAdmin):
-    list_display = ("text", "link_url", "is_active", "created_at")
+    list_display = ("text", "link_url", "sort_order", "is_active", "created_at")
     list_filter = ("is_active",)
-    list_editable = ("is_active",)
+    list_editable = ("sort_order", "is_active")
+    ordering = ("sort_order", "-created_at")
+
+
+@admin.register(ContactMessage)
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = ("name", "email", "phone", "subject", "is_read", "created_at")
+    list_filter = ("is_read", "created_at")
+    list_editable = ("is_read",)
+    search_fields = ("name", "email", "phone", "subject", "message")
+    readonly_fields = ("created_at", "updated_at")
+    ordering = ("-created_at",)

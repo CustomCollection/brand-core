@@ -4,16 +4,17 @@ CMS views — public endpoints for dynamic site content.
 These endpoints power the entire frontend without any hardcoded content.
 """
 
-from rest_framework import permissions
+from rest_framework import permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.products.models import Product
 from apps.products.serializers import ProductListSerializer
 
-from .models import AnnouncementBar, HeroBanner, HomepageSection, SiteConfig
+from .models import AnnouncementBar, ContactMessage, HeroBanner, HomepageSection, SiteConfig
 from .serializers import (
     AnnouncementBarSerializer,
+    ContactMessageSerializer,
     HeroBannerSerializer,
     HomepageSectionSerializer,
     SiteConfigSerializer,
@@ -24,7 +25,7 @@ class SiteConfigView(APIView):
     """
     Get site-wide configuration: brand info, social links, contact details.
 
-    This endpoint is called once on initial page load and cached on the frontend.
+    This endpoint is called on initial page load and cached on the frontend.
     """
 
     permission_classes = [permissions.AllowAny]
@@ -47,16 +48,22 @@ class HomepageView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request):
-        # Banners
-        banners = HeroBanner.objects.filter(is_active=True)
+        # Banners (ordered by sort_order)
+        banners = HeroBanner.objects.filter(is_active=True).order_by("sort_order", "-created_at")
         banners_data = HeroBannerSerializer(banners, many=True).data
 
-        # Sections
-        sections = HomepageSection.objects.filter(is_active=True)
+        # Sections (ordered by sort_order, linked to collections)
+        sections = (
+            HomepageSection.objects.filter(is_active=True)
+            .select_related("collection")
+            .order_by("sort_order", "-created_at")
+        )
         sections_data = HomepageSectionSerializer(sections, many=True).data
 
-        # Announcements
-        announcements = AnnouncementBar.objects.filter(is_active=True)
+        # Announcements (ordered by sort_order)
+        announcements = AnnouncementBar.objects.filter(is_active=True).order_by(
+            "sort_order", "-created_at"
+        )
         announcements_data = AnnouncementBarSerializer(announcements, many=True).data
 
         # Featured products
@@ -86,4 +93,19 @@ class HomepageView(APIView):
                 "best_sellers": best_sellers_data,
                 "new_arrivals": new_arrivals_data,
             }
+        )
+
+
+class ContactMessageCreateView(APIView):
+    """Submit a contact inquiry message."""
+
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        serializer = ContactMessageSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {"message": "Thank you! Your message has been received."},
+            status=status.HTTP_201_CREATED,
         )

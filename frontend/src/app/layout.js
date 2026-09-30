@@ -13,56 +13,83 @@ import AnnouncementBar from '@/components/layout/AnnouncementBar';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
-async function getAnnouncement() {
+async function getAnnouncements() {
   try {
     const data = await apiGet(ENDPOINTS.CMS.HOMEPAGE, {
-      next: { revalidate: 300 },
+      next: { revalidate: 10 },
     });
-    const active = (data?.announcements || []).find((a) => a.text);
-    return active || null;
+    return Array.isArray(data?.announcements) ? data.announcements : [];
+  } catch {
+    return [];
+  }
+}
+
+async function getSiteConfig() {
+  try {
+    const data = await apiGet(ENDPOINTS.CMS.SITE_CONFIG, {
+      next: { revalidate: 10 },
+    });
+    return data || null;
   } catch {
     return null;
   }
 }
 
-export const metadata = {
-  title: {
-    default: 'CustomCollection — Premium Clothing Brand',
-    template: '%s | CustomCollection',
-  },
-  description:
-    'Shop premium quality clothing at CustomCollection. Discover our exclusive collections of oversized tees, hoodies, and more.',
-  keywords: ['clothing', 'fashion', 'premium', 'tshirts', 'hoodies', 'CustomCollection'],
-  openGraph: {
-    type: 'website',
-    locale: 'en_IN',
-    siteName: 'CustomCollection',
-  },
-};
+export async function generateMetadata() {
+  const config = await getSiteConfig();
+  const title = config?.meta_title || config?.brand_name || 'CustomCollection — Premium Clothing Brand';
+  const description = config?.meta_description || 'Shop premium quality clothing at CustomCollection.';
+  const favicon = config?.favicon_url || config?.logo_url || '/favicon.ico';
+
+  return {
+    title: {
+      default: title,
+      template: `%s | ${config?.brand_name || 'CustomCollection'}`,
+    },
+    description,
+    keywords: ['clothing', 'fashion', 'premium', 'tshirts', 'hoodies', config?.brand_name || 'CustomCollection'],
+    icons: {
+      icon: favicon,
+      shortcut: favicon,
+      apple: favicon,
+    },
+    openGraph: {
+      title,
+      description,
+      type: 'website',
+      locale: 'en_IN',
+      siteName: config?.brand_name || 'CustomCollection',
+      images: config?.logo_url ? [{ url: config.logo_url }] : [],
+    },
+  };
+}
 
 export default async function RootLayout({ children }) {
-  const announcement = await getAnnouncement();
+  const [announcements, config] = await Promise.all([
+    getAnnouncements(),
+    getSiteConfig(),
+  ]);
+
+  const favicon = config?.favicon_url || config?.logo_url;
 
   return (
     <html lang='en' className={inter.variable}>
       <head>
         <link rel='preconnect' href='https://fonts.googleapis.com' />
         <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='anonymous' />
+        {favicon && <link rel='icon' href={favicon} />}
+        {favicon && <link rel='shortcut icon' href={favicon} />}
+        {favicon && <link rel='apple-touch-icon' href={favicon} />}
       </head>
       <body className='font-sans antialiased'>
         <AuthProvider>
           <ToastProvider>
             <CartProvider>
               <WishlistProvider>
-                {announcement && (
-                  <AnnouncementBar
-                    text={announcement.text}
-                    linkUrl={announcement.link_url}
-                  />
-                )}
-                <Header />
+                <AnnouncementBar announcements={announcements} />
+                <Header initialSiteConfig={config} />
                 <main className='min-h-screen'>{children}</main>
-                <Footer />
+                <Footer initialSiteConfig={config} />
                 <CartDrawer />
               </WishlistProvider>
             </CartProvider>

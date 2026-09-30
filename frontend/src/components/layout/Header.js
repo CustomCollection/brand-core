@@ -15,16 +15,11 @@ import {
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
+import { apiGet } from '@/lib/api';
+import { ENDPOINTS } from '@/lib/endpoints';
 import { cn } from '@/lib/utils';
 
-const NAV_LINKS = [
-  { label: 'New Arrivals', href: '/products?is_new_arrival=true' },
-  { label: 'Collections', href: '/collections' },
-  { label: 'Men', href: '/products?collection=men' },
-  { label: 'Women', href: '/products?collection=women' },
-];
-
-export default function Header() {
+export default function Header({ initialSiteConfig = null }) {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuth();
@@ -33,16 +28,31 @@ export default function Header() {
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isMobileShopOpen, setIsMobileShopOpen] = useState(true);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [isAccountOpen, setIsAccountOpen] = useState(false);
+  const [isShopOpen, setIsShopOpen] = useState(false);
+  const [siteConfig, setSiteConfig] = useState(initialSiteConfig);
   const searchInputRef = useRef(null);
   const accountRef = useRef(null);
+  const shopRef = useRef(null);
 
   const isHomepage = pathname === '/';
 
+  // Fetch or refresh site configuration for dynamic logo and brand name
+  useEffect(() => {
+    apiGet(ENDPOINTS.CMS.SITE_CONFIG)
+      .then((cfg) => {
+        if (cfg) setSiteConfig(cfg);
+      })
+      .catch(() => {});
+  }, []);
+
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
+    // Call once initially to set correct state
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -51,21 +61,25 @@ export default function Header() {
     if (isSearchOpen) searchInputRef.current?.focus();
   }, [isSearchOpen]);
 
-  // Close account dropdown on outside click
+  // Close account and shop dropdowns on outside click
   useEffect(() => {
     const handler = (e) => {
       if (accountRef.current && !accountRef.current.contains(e.target)) {
         setIsAccountOpen(false);
+      }
+      if (shopRef.current && !shopRef.current.contains(e.target)) {
+        setIsShopOpen(false);
       }
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  // Close mobile menu on route change
+  // Close mobile menu and dropdowns on route change
   useEffect(() => {
     setIsMobileOpen(false);
     setIsSearchOpen(false);
+    setIsShopOpen(false);
   }, [pathname]);
 
   const handleSearch = useCallback(
@@ -85,7 +99,8 @@ export default function Header() {
     setIsAccountOpen(false);
   };
 
-  const transparent = false;
+  // Transparent header on homepage when not scrolled; solid white when scrolled or on subpages
+  const transparent = isHomepage && !isScrolled;
 
   return (
     <>
@@ -93,62 +108,108 @@ export default function Header() {
         className={cn(
           'fixed top-0 left-0 right-0 z-40 transition-all duration-300',
           transparent
-            ? 'bg-transparent'
-            : 'bg-background/95 backdrop-blur-sm border-b border-border shadow-sm'
+            ? 'bg-transparent border-b border-transparent'
+            : 'bg-white/95 backdrop-blur-md border-b border-neutral-100 shadow-sm'
         )}
       >
         <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
-          <div className='flex h-16 items-center justify-between'>
+          <div className='flex h-20 sm:h-24 items-center justify-between'>
             {/* Left: Mobile menu toggle + Nav */}
             <div className='flex items-center gap-6'>
               <button
-                className={cn(
-                  'lg:hidden transition-colors',
-                  transparent ? 'text-background' : 'text-text-primary'
-                )}
+                className='lg:hidden transition-colors text-text-primary hover:text-accent'
                 onClick={() => setIsMobileOpen((v) => !v)}
                 aria-label='Toggle menu'
               >
                 {isMobileOpen ? <X size={22} /> : <Menu size={22} />}
               </button>
 
-              <nav className='hidden lg:flex items-center gap-8'>
-                {NAV_LINKS.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    className={cn(
-                      'text-xs font-semibold uppercase tracking-widest transition-colors link-underline',
-                      transparent
-                        ? 'text-background hover:text-background/80'
-                        : 'text-text-primary hover:text-accent'
-                    )}
+              <nav className='hidden lg:flex items-center'>
+                {/* Shop Dropdown with arrow icon */}
+                <div
+                  className='relative'
+                  ref={shopRef}
+                  onMouseEnter={() => setIsShopOpen(true)}
+                  onMouseLeave={() => setIsShopOpen(false)}
+                >
+                  <button
+                    type='button'
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsShopOpen((v) => !v);
+                    }}
+                    className='flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-text-primary hover:text-accent transition-colors py-2 group cursor-pointer'
+                    aria-expanded={isShopOpen}
                   >
-                    {link.label}
-                  </Link>
-                ))}
+                    <span>Shop</span>
+                    <ChevronDown
+                      size={14}
+                      className={cn(
+                        'transition-transform duration-200 text-text-primary/70 group-hover:text-accent',
+                        isShopOpen && 'rotate-180'
+                      )}
+                    />
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  {isShopOpen && (
+                    <div className='absolute top-full left-0 pt-2 z-50'>
+                      <div className='w-52 rounded-xl bg-white p-2 shadow-2xl border border-neutral-100 backdrop-blur-md animate-in fade-in-0 zoom-in-95 duration-150'>
+                        <Link
+                          href='/collections'
+                          onClick={() => setIsShopOpen(false)}
+                          className='flex flex-col px-3.5 py-2.5 rounded-lg text-xs font-medium text-text-primary hover:bg-neutral-50 hover:text-accent transition-colors group/item'
+                        >
+                          <span className='font-semibold uppercase tracking-wider'>1. Collections</span>
+                          <span className='text-[11px] text-text-muted font-normal mt-0.5 group-hover/item:text-text-secondary'>
+                            Curated seasonal drops
+                          </span>
+                        </Link>
+                        <div className='my-1 h-px bg-neutral-100' />
+                        <Link
+                          href='/products'
+                          onClick={() => setIsShopOpen(false)}
+                          className='flex flex-col px-3.5 py-2.5 rounded-lg text-xs font-medium text-text-primary hover:bg-neutral-50 hover:text-accent transition-colors group/item'
+                        >
+                          <span className='font-semibold uppercase tracking-wider'>2. All Products</span>
+                          <span className='text-[11px] text-text-muted font-normal mt-0.5 group-hover/item:text-text-secondary'>
+                            Complete catalog & filters
+                          </span>
+                        </Link>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </nav>
             </div>
 
-            {/* Center: Logo */}
+            {/* Center: Logo (Bold, Prominent & Clearly visible) */}
             <Link
               href='/'
-              className={cn(
-                'absolute left-1/2 -translate-x-1/2 text-lg font-light uppercase tracking-[0.25em] transition-colors',
-                transparent ? 'text-background' : 'text-text-primary'
-              )}
+              className='absolute left-1/2 -translate-x-1/2 flex items-center justify-center transition-transform hover:scale-105'
             >
-              CustomCollection
+              {siteConfig?.logo_url ? (
+                <img
+                  src={
+                    siteConfig.logo_url.includes('cloudinary.com') && !siteConfig.logo_url.includes('e_trim')
+                      ? siteConfig.logo_url.replace('/image/upload/', '/image/upload/e_trim/')
+                      : siteConfig.logo_url
+                  }
+                  alt={siteConfig.brand_name || 'Logo'}
+                  className='h-14 sm:h-18 md:h-20 w-auto max-w-[280px] sm:max-w-[340px] object-contain drop-shadow-md'
+                />
+              ) : (
+                <span className='text-2xl sm:text-3xl font-light uppercase tracking-[0.25em] text-text-primary'>
+                  {siteConfig?.brand_name || 'CustomCollection'}
+                </span>
+              )}
             </Link>
 
             {/* Right: Icons */}
             <div className='flex items-center gap-4'>
               {/* Search */}
               <button
-                className={cn(
-                  'transition-colors',
-                  transparent ? 'text-background' : 'text-text-primary hover:text-accent'
-                )}
+                className='transition-colors text-text-primary hover:text-accent cursor-pointer'
                 onClick={() => setIsSearchOpen((v) => !v)}
                 aria-label='Search'
               >
@@ -159,10 +220,7 @@ export default function Header() {
               {user && (
                 <Link
                   href='/account/wishlist'
-                  className={cn(
-                    'relative transition-colors',
-                    transparent ? 'text-background' : 'text-text-primary hover:text-accent'
-                  )}
+                  className='relative transition-colors text-text-primary hover:text-accent'
                   aria-label='Wishlist'
                 >
                   <Heart size={20} />
@@ -177,10 +235,7 @@ export default function Header() {
               {/* Account */}
               <div className='relative' ref={accountRef}>
                 <button
-                  className={cn(
-                    'flex items-center gap-1 transition-colors',
-                    transparent ? 'text-background' : 'text-text-primary hover:text-accent'
-                  )}
+                  className='flex items-center gap-1 transition-colors text-text-primary hover:text-accent cursor-pointer'
                   onClick={() => setIsAccountOpen((v) => !v)}
                   aria-label='Account'
                 >
@@ -265,10 +320,7 @@ export default function Header() {
 
               {/* Cart */}
               <button
-                className={cn(
-                  'relative transition-colors',
-                  transparent ? 'text-background' : 'text-text-primary hover:text-accent'
-                )}
+                className='relative transition-colors text-text-primary hover:text-accent cursor-pointer'
                 onClick={openCart}
                 aria-label='Shopping cart'
               >
@@ -320,17 +372,40 @@ export default function Header() {
 
       {/* Mobile menu */}
       {isMobileOpen && (
-        <div className='fixed inset-0 z-30 bg-background pt-16 animate-slide-down lg:hidden'>
+        <div className='fixed inset-0 z-30 bg-background pt-20 animate-slide-down lg:hidden overflow-y-auto'>
           <nav className='flex flex-col border-t border-border'>
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className='border-b border-border px-6 py-4 text-sm font-semibold uppercase tracking-widest text-text-primary hover:bg-surface transition-colors'
+            {/* Mobile Shop Accordion */}
+            <div className='border-b border-border'>
+              <button
+                onClick={() => setIsMobileShopOpen((v) => !v)}
+                className='w-full flex items-center justify-between px-6 py-4 text-sm font-semibold uppercase tracking-widest text-text-primary hover:bg-surface transition-colors'
               >
-                {link.label}
-              </Link>
-            ))}
+                <span>Shop</span>
+                <ChevronDown
+                  size={16}
+                  className={cn('transition-transform duration-200', isMobileShopOpen && 'rotate-180')}
+                />
+              </button>
+              {isMobileShopOpen && (
+                <div className='bg-surface/50 px-6 py-2 space-y-1 border-t border-border/40'>
+                  <Link
+                    href='/collections'
+                    onClick={() => setIsMobileOpen(false)}
+                    className='block py-2.5 text-xs font-semibold uppercase tracking-wider text-text-primary hover:text-accent transition-colors'
+                  >
+                    1. Collections
+                  </Link>
+                  <Link
+                    href='/products'
+                    onClick={() => setIsMobileOpen(false)}
+                    className='block py-2.5 text-xs font-semibold uppercase tracking-wider text-text-primary hover:text-accent transition-colors'
+                  >
+                    2. All Products
+                  </Link>
+                </div>
+              )}
+            </div>
+
             <div className='border-b border-border px-6 py-4'>
               {user ? (
                 <>
