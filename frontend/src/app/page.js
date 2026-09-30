@@ -1,4 +1,4 @@
-﻿import Link from 'next/link';
+import Link from 'next/link';
 import { ArrowRight, Star } from 'lucide-react';
 import { apiGet } from '@/lib/api';
 import { ENDPOINTS } from '@/lib/endpoints';
@@ -47,15 +47,15 @@ export default async function HomePage() {
       {/* ─── DYNAMIC HOMEPAGE SECTIONS (FROM CMS) ─── */}
       {sections.length > 0 ? (
         sections.map((section) => (
-          <section key={section.id} className='mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 border-b border-border/40 last:border-b-0'>
-            <div className='flex items-end justify-between mb-10'>
+          <section key={section.id} className='mx-auto max-w-7xl px-4 py-12 sm:py-20 sm:px-6 lg:px-8 border-b border-border/40 last:border-b-0'>
+            <div className='flex items-end justify-between mb-8 sm:mb-10'>
               <div>
                 {section.subtitle && (
                   <p className='text-xs font-semibold uppercase tracking-[0.3em] text-accent'>
                     {section.subtitle}
                   </p>
                 )}
-                <h2 className='mt-2 text-3xl font-light uppercase tracking-widest text-text-primary'>
+                <h2 className='mt-2 text-2xl sm:text-3xl font-light uppercase tracking-widest text-text-primary'>
                   {section.title || section.collection_name}
                 </h2>
               </div>
@@ -83,11 +83,11 @@ export default async function HomePage() {
       ) : (
         /* Fallback if no sections have been added in admin yet */
         featuredProducts.length > 0 && (
-          <section className='mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8'>
-            <div className='flex items-end justify-between mb-10'>
+          <section className='mx-auto max-w-7xl px-4 py-12 sm:py-20 sm:px-6 lg:px-8'>
+            <div className='flex items-end justify-between mb-8 sm:mb-10'>
               <div>
                 <p className='text-xs font-semibold uppercase tracking-[0.3em] text-accent'>Curated for You</p>
-                <h2 className='mt-2 text-3xl font-light uppercase tracking-widest text-text-primary'>
+                <h2 className='mt-2 text-2xl sm:text-3xl font-light uppercase tracking-widest text-text-primary'>
                   Featured
                 </h2>
               </div>
@@ -109,11 +109,11 @@ export default async function HomePage() {
 
       {/* ─── WHY CHOOSE US (KEPT AS REQUESTED) ─── */}
       <section className='relative overflow-hidden bg-surface'>
-        <div className='mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8'>
-          <div className='grid lg:grid-cols-2 gap-12 items-center'>
+        <div className='mx-auto max-w-7xl px-4 py-12 sm:py-20 sm:px-6 lg:px-8'>
+          <div className='grid lg:grid-cols-2 gap-8 sm:gap-12 items-center'>
             <div className='space-y-6 animate-fade-in-up'>
               <p className='text-xs font-semibold uppercase tracking-[0.3em] text-accent'>Why Choose Us</p>
-              <h2 className='text-4xl font-light uppercase tracking-widest text-text-primary leading-tight'>
+              <h2 className='text-2xl sm:text-4xl font-light uppercase tracking-widest text-text-primary leading-tight'>
                 Quality You Can Feel
               </h2>
               <p className='text-text-secondary leading-relaxed'>
@@ -155,28 +155,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ─── FINAL CTA ─── */}
-      <section className='bg-primary py-20'>
-        <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center'>
-          <p className='text-xs font-semibold uppercase tracking-[0.3em] text-accent mb-4'>Limited Edition Drops</p>
-          <h2 className='text-4xl sm:text-5xl font-light uppercase tracking-widest text-background mb-6'>
-            Be the First to Know
-          </h2>
-          <p className='text-background/60 mb-10 max-w-md mx-auto'>
-            Sign up to our newsletter for early access to new drops, exclusive offers, and styling inspiration.
-          </p>
-          <div className='flex max-w-md mx-auto gap-0'>
-            <input
-              type='email'
-              placeholder='Your email address'
-              className='flex-1 bg-transparent border border-background/30 text-background placeholder:text-background/40 px-5 py-3 text-sm focus:outline-none focus:border-accent transition-colors'
-            />
-            <button className='bg-accent text-background px-6 py-3 text-xs font-semibold uppercase tracking-widest hover:bg-accent-dark transition-colors flex-shrink-0'>
-              Subscribe
-            </button>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }

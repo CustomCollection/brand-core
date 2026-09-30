@@ -56,7 +56,7 @@ export default async function CollectionDetailPage({ params, searchParams }) {
   return (
     <div className='bg-background pt-16'>
       {/* Hero */}
-      <div className='relative bg-primary py-20 overflow-hidden'>
+      <div className='relative bg-primary py-12 sm:py-20 overflow-hidden'>
         {collection.image_url && (
           <Image
             src={collection.image_url}
@@ -68,14 +68,14 @@ export default async function CollectionDetailPage({ params, searchParams }) {
           />
         )}
         <div className='relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center'>
-          <nav className='flex justify-center items-center gap-2 text-xs text-background/60 mb-6'>
+          <nav className='flex justify-center items-center gap-2 text-xs text-background/60 mb-4 sm:mb-6'>
             <Link href='/' className='hover:text-background transition-colors'>Home</Link>
             <span>/</span>
             <Link href='/collections' className='hover:text-background transition-colors'>Collections</Link>
             <span>/</span>
             <span className='text-background'>{collection.name}</span>
           </nav>
-          <h1 className='text-4xl font-light uppercase tracking-widest text-background'>
+          <h1 className='text-2xl sm:text-4xl font-light uppercase tracking-widest text-background'>
             {collection.name}
           </h1>
           {collection.description && (

@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .serializers import CheckoutSerializer, OrderDetailSerializer, OrderListSerializer
-from .services import create_order, get_order_detail, get_user_orders
+from .services import cancel_order, create_order, get_order_detail, get_user_orders
 
 
 class CheckoutView(APIView):
@@ -50,3 +50,20 @@ class OrderDetailView(APIView):
         order = get_order_detail(request.user, order_number)
         serializer = OrderDetailSerializer(order)
         return Response(serializer.data)
+
+
+class CancelOrderView(APIView):
+    """Cancel an order before it has been printed."""
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, order_number):
+        reason = request.data.get("reason", "").strip()
+        upi_id = request.data.get("upi_id", "").strip()
+        order = cancel_order(request.user, order_number, reason=reason, upi_id=upi_id)
+        serializer = OrderDetailSerializer(order)
+        return Response(
+            {"message": "Order cancelled successfully.", "order": serializer.data},
+            status=status.HTTP_200_OK,
+        )
+

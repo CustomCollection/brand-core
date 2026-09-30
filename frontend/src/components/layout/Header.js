@@ -151,16 +151,16 @@ export default function Header({ initialSiteConfig = null }) {
                     />
                   </button>
 
-                  {/* Dropdown Menu */}
+                  {/* Dropdown Menu (Box style, no rounded corners, no numbering) */}
                   {isShopOpen && (
                     <div className='absolute top-full left-0 pt-2 z-50'>
-                      <div className='w-52 rounded-xl bg-white p-2 shadow-2xl border border-neutral-100 backdrop-blur-md animate-in fade-in-0 zoom-in-95 duration-150'>
+                      <div className='w-52 rounded-none bg-white p-2 shadow-2xl border border-neutral-200 backdrop-blur-md animate-in fade-in-0 zoom-in-95 duration-150'>
                         <Link
                           href='/collections'
                           onClick={() => setIsShopOpen(false)}
-                          className='flex flex-col px-3.5 py-2.5 rounded-lg text-xs font-medium text-text-primary hover:bg-neutral-50 hover:text-accent transition-colors group/item'
+                          className='flex flex-col px-3.5 py-2.5 rounded-none text-xs font-medium text-text-primary hover:bg-neutral-50 hover:text-accent transition-colors group/item'
                         >
-                          <span className='font-semibold uppercase tracking-wider'>1. Collections</span>
+                          <span className='font-semibold uppercase tracking-wider'>Collections</span>
                           <span className='text-[11px] text-text-muted font-normal mt-0.5 group-hover/item:text-text-secondary'>
                             Curated seasonal drops
                           </span>
@@ -169,9 +169,9 @@ export default function Header({ initialSiteConfig = null }) {
                         <Link
                           href='/products'
                           onClick={() => setIsShopOpen(false)}
-                          className='flex flex-col px-3.5 py-2.5 rounded-lg text-xs font-medium text-text-primary hover:bg-neutral-50 hover:text-accent transition-colors group/item'
+                          className='flex flex-col px-3.5 py-2.5 rounded-none text-xs font-medium text-text-primary hover:bg-neutral-50 hover:text-accent transition-colors group/item'
                         >
-                          <span className='font-semibold uppercase tracking-wider'>2. All Products</span>
+                          <span className='font-semibold uppercase tracking-wider'>All Products</span>
                           <span className='text-[11px] text-text-muted font-normal mt-0.5 group-hover/item:text-text-secondary'>
                             Complete catalog & filters
                           </span>
@@ -183,7 +183,7 @@ export default function Header({ initialSiteConfig = null }) {
               </nav>
             </div>
 
-            {/* Center: Logo (Bold, Prominent & Clearly visible) */}
+            {/* Center: Logo (Refined, balanced & elegant) */}
             <Link
               href='/'
               className='absolute left-1/2 -translate-x-1/2 flex items-center justify-center transition-transform hover:scale-105'
@@ -196,17 +196,17 @@ export default function Header({ initialSiteConfig = null }) {
                       : siteConfig.logo_url
                   }
                   alt={siteConfig.brand_name || 'Logo'}
-                  className='h-14 sm:h-18 md:h-20 w-auto max-w-[280px] sm:max-w-[340px] object-contain drop-shadow-md'
+                  className='h-8 sm:h-10 md:h-11 w-auto max-w-[130px] sm:max-w-[200px] object-contain'
                 />
               ) : (
-                <span className='text-2xl sm:text-3xl font-light uppercase tracking-[0.25em] text-text-primary'>
+                <span className='text-lg sm:text-2xl font-light uppercase tracking-[0.2em] text-text-primary'>
                   {siteConfig?.brand_name || 'CustomCollection'}
                 </span>
               )}
             </Link>
 
             {/* Right: Icons */}
-            <div className='flex items-center gap-4'>
+            <div className='flex items-center gap-2.5 sm:gap-4'>
               {/* Search */}
               <button
                 className='transition-colors text-text-primary hover:text-accent cursor-pointer'
@@ -393,14 +393,14 @@ export default function Header({ initialSiteConfig = null }) {
                     onClick={() => setIsMobileOpen(false)}
                     className='block py-2.5 text-xs font-semibold uppercase tracking-wider text-text-primary hover:text-accent transition-colors'
                   >
-                    1. Collections
+                    Collections
                   </Link>
                   <Link
                     href='/products'
                     onClick={() => setIsMobileOpen(false)}
                     className='block py-2.5 text-xs font-semibold uppercase tracking-wider text-text-primary hover:text-accent transition-colors'
                   >
-                    2. All Products
+                    All Products
                   </Link>
                 </div>
               )}
@@ -410,15 +410,60 @@ export default function Header({ initialSiteConfig = null }) {
               {user ? (
                 <>
                   <p className='text-xs text-text-muted mb-3'>Signed in as {user.email}</p>
-                  <Link href='/account/profile' className='block text-sm font-medium text-text-primary mb-2'>My Profile</Link>
-                  <Link href='/account/orders' className='block text-sm font-medium text-text-primary mb-2'>My Orders</Link>
-                  <Link href='/account/wishlist' className='block text-sm font-medium text-text-primary mb-2'>Wishlist</Link>
-                  <button onClick={handleLogout} className='text-sm font-medium text-error mt-2'>Sign Out</button>
+                  <Link
+                    href='/account/profile'
+                    onClick={() => setIsMobileOpen(false)}
+                    className='block text-sm font-medium text-text-primary mb-2 hover:text-accent transition-colors'
+                  >
+                    My Profile
+                  </Link>
+                  <Link
+                    href='/account/orders'
+                    onClick={() => setIsMobileOpen(false)}
+                    className='block text-sm font-medium text-text-primary mb-2 hover:text-accent transition-colors'
+                  >
+                    My Orders
+                  </Link>
+                  <Link
+                    href='/account/addresses'
+                    onClick={() => setIsMobileOpen(false)}
+                    className='block text-sm font-medium text-text-primary mb-2 hover:text-accent transition-colors'
+                  >
+                    Addresses
+                  </Link>
+                  <Link
+                    href='/account/wishlist'
+                    onClick={() => setIsMobileOpen(false)}
+                    className='block text-sm font-medium text-text-primary mb-2 hover:text-accent transition-colors'
+                  >
+                    Wishlist
+                  </Link>
+                  <button
+                    onClick={() => {
+                      setIsMobileOpen(false);
+                      handleLogout();
+                    }}
+                    className='text-sm font-medium text-error mt-2 cursor-pointer'
+                  >
+                    Sign Out
+                  </button>
                 </>
               ) : (
                 <div className='flex gap-4'>
-                  <Link href='/login' className='text-sm font-semibold uppercase tracking-widest text-primary'>Sign In</Link>
-                  <Link href='/register' className='text-sm font-semibold uppercase tracking-widest text-accent'>Create Account</Link>
+                  <Link
+                    href='/login'
+                    onClick={() => setIsMobileOpen(false)}
+                    className='text-sm font-semibold uppercase tracking-widest text-primary hover:text-accent'
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href='/register'
+                    onClick={() => setIsMobileOpen(false)}
+                    className='text-sm font-semibold uppercase tracking-widest text-accent hover:underline'
+                  >
+                    Create Account
+                  </Link>
                 </div>
               )}
             </div>

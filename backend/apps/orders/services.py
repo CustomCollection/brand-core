@@ -136,6 +136,80 @@ def get_order_detail(user, order_number):
         raise BadRequest("Order not found.")
 
 
+def cancel_order(user, order_number, reason=None, upi_id=None):
+    """
+    Cancel an order before it has been printed.
+
+    Orders can only be cancelled when status is 'pending' or 'confirmed'.
+    Once status is 'printing', 'packed', 'shipped', or 'delivered', cancellation is blocked.
+    If the order was paid online, user must provide UPI ID, and a Refund record is created
+    for admin processing.
+    """
+    try:
+        order = (
+            Order.objects.filter(user=user)
+            .prefetch_related("items")
+            .select_related("shipment", "payment")
+            .get(order_number=order_number)
+        )
+    except Order.DoesNotExist:
+        raise BadRequest("Order not found.")
+
+    if order.status in [
+        Order.Status.PRINTING,
+        Order.Status.PACKED,
+        Order.Status.SHIPPED,
+        Order.Status.DELIVERED,
+    ]:
+        raise BadRequest("Your order has already been printed and cannot be cancelled.")
+
+    if order.status == Order.Status.CANCELLED:
+        raise BadRequest("This order has already been cancelled.")
+
+    if order.status == Order.Status.RETURNED:
+        raise BadRequest("This order cannot be cancelled.")
+
+    # Check if payment was made
+    payment = getattr(order, "payment", None)
+    is_paid = payment is not None and payment.status == "paid"
+
+    reason_text = f"Cancelled by user. Reason: {reason}" if reason else "Cancelled by user."
+
+    if is_paid:
+        if not upi_id or not upi_id.strip():
+            raise BadRequest("Please provide your UPI ID to process the refund.")
+
+        clean_upi = upi_id.strip()
+        if "@" not in clean_upi:
+            raise BadRequest("Please provide a valid UPI ID (e.g. name@okhdfcbank).")
+
+        from apps.payments.models import Refund
+
+        Refund.objects.get_or_create(
+            order=order,
+            defaults={
+                "payment": payment,
+                "user": user,
+                "amount": order.total,
+                "upi_id": clean_upi,
+                "reason": reason or "Cancelled by user.",
+                "status": Refund.Status.PENDING,
+            },
+        )
+        refund_note = f"Refund requested: ₹{order.total} to UPI ID {clean_upi}"
+        reason_text = f"{reason_text}\n{refund_note}"
+
+    order.status = Order.Status.CANCELLED
+    if order.notes:
+        order.notes = f"{order.notes}\n{reason_text}"
+    else:
+        order.notes = reason_text
+
+    order.save(update_fields=["status", "notes", "updated_at"])
+    logger.info("Order %s cancelled by user %s", order.order_number, user.email)
+    return order
+
+
 def send_order_confirmation_email(order):
     """Send order confirmation email to the customer."""
     try:

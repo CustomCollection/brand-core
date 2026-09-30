@@ -25,7 +25,8 @@ export default function AccountSidebar() {
 
   return (
     <aside className='w-full lg:w-64 flex-shrink-0'>
-      <div className='sticky top-24 space-y-1'>
+      {/* Desktop view */}
+      <div className='hidden lg:block sticky top-24 space-y-1'>
         {/* User info */}
         {user && (
           <div className='px-4 py-4 mb-4 bg-surface border border-border'>
@@ -59,11 +60,42 @@ export default function AccountSidebar() {
         {/* Logout */}
         <button
           onClick={handleLogout}
-          className='flex items-center gap-3 px-4 py-3 text-sm font-medium text-error hover:bg-error-light transition-colors w-full border-l-2 border-transparent mt-4'
+          className='flex items-center gap-3 px-4 py-3 text-sm font-medium text-error hover:bg-error-light transition-colors w-full border-l-2 border-transparent mt-4 cursor-pointer'
         >
           <LogOut size={16} />
           Sign Out
         </button>
+      </div>
+
+      {/* Mobile view: Horizontal scrollable tab bar */}
+      <div className='lg:hidden -mx-4 px-4 overflow-x-auto border-b border-border mb-6'>
+        <div className='flex gap-2 min-w-max pb-2'>
+          {NAV_ITEMS.map(({ label, href, icon: Icon }) => {
+            const active = pathname === href || pathname.startsWith(href + '/');
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={cn(
+                  'flex items-center gap-2 px-3.5 py-2 text-xs font-semibold uppercase tracking-wider transition-colors border-b-2',
+                  active
+                    ? 'border-accent text-text-primary'
+                    : 'border-transparent text-text-muted hover:text-text-primary'
+                )}
+              >
+                <Icon size={14} />
+                {label}
+              </Link>
+            );
+          })}
+          <button
+            onClick={handleLogout}
+            className='flex items-center gap-1.5 px-3 py-2 text-xs font-semibold uppercase tracking-wider text-error hover:text-error/80 transition-colors border-b-2 border-transparent cursor-pointer'
+          >
+            <LogOut size={14} />
+            Sign Out
+          </button>
+        </div>
       </div>
     </aside>
   );

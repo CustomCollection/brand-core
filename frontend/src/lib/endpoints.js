@@ -79,6 +79,7 @@ export const ENDPOINTS = {
     CHECKOUT: '/orders/checkout/',
     LIST: '/orders/',
     DETAIL: (orderNumber) => `/orders/${orderNumber}/`,
+    CANCEL: (orderNumber) => `/orders/${orderNumber}/cancel/`,
   },
   PAYMENTS: {
     CREATE_ORDER: '/payments/create-order/',

@@ -102,142 +102,165 @@ export default async function ProductsPage({ searchParams }) {
     return `/products?${params.toString()}`;
   };
 
+  const filterContent = (
+    <div className='space-y-8'>
+      {/* Sort */}
+      <div>
+        <h3 className='text-xs font-semibold uppercase tracking-widest text-text-primary mb-3 border-b border-border pb-2'>
+          Sort By
+        </h3>
+        <div className='space-y-0.5'>
+          {SORT_OPTIONS.map((opt) => (
+            <FilterLink
+              key={opt.value}
+              href={makeFilterUrl('ordering', opt.value)}
+              isActive={activeOrdering === opt.value}
+            >
+              {opt.label}
+            </FilterLink>
+          ))}
+        </div>
+      </div>
+
+      {/* Collections */}
+      {filters.collections.length > 0 && (
+        <div>
+          <h3 className='text-xs font-semibold uppercase tracking-widest text-text-primary mb-3 border-b border-border pb-2'>
+            Collection
+          </h3>
+          <div className='space-y-0.5'>
+            <FilterLink href='/products' isActive={!activeCollection}>
+              All
+            </FilterLink>
+            {filters.collections.map((c) => (
+              <FilterLink
+                key={c.id}
+                href={makeFilterUrl('collection', c.slug)}
+                isActive={activeCollection === c.slug}
+              >
+                {c.name}
+              </FilterLink>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Sizes */}
+      {filters.sizes.length > 0 && (
+        <div>
+          <h3 className='text-xs font-semibold uppercase tracking-widest text-text-primary mb-3 border-b border-border pb-2'>
+            Size
+          </h3>
+          <div className='flex flex-wrap gap-2'>
+            {filters.sizes.map((s) => (
+              <Link
+                key={s.id}
+                href={makeFilterUrl('size', activeSize === s.name ? '' : s.name)}
+                className={`h-8 min-w-[32px] px-2 border text-xs font-medium transition-all flex items-center justify-center ${
+                  activeSize === s.name
+                    ? 'border-primary bg-primary text-background'
+                    : 'border-border text-text-primary hover:border-primary'
+                }`}
+              >
+                {s.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Colors */}
+      {filters.colors.length > 0 && (
+        <div>
+          <h3 className='text-xs font-semibold uppercase tracking-widest text-text-primary mb-3 border-b border-border pb-2'>
+            Color
+          </h3>
+          <div className='flex flex-wrap gap-2'>
+            {filters.colors.map((c) => (
+              <Link
+                key={c.id}
+                href={makeFilterUrl('color', activeColor === c.name ? '' : c.name)}
+                title={c.name}
+                aria-label={c.name}
+                className={`h-7 w-7 rounded-full border-2 transition-all ${
+                  activeColor === c.name
+                    ? 'border-primary scale-110'
+                    : 'border-transparent hover:border-border'
+                }`}
+                style={{ backgroundColor: c.hex_code }}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Tags */}
+      {filters.tags.length > 0 && (
+        <div>
+          <h3 className='text-xs font-semibold uppercase tracking-widest text-text-primary mb-3 border-b border-border pb-2'>
+            Style
+          </h3>
+          <div className='flex flex-wrap gap-2'>
+            {filters.tags.map((t) => (
+              <Link
+                key={t.id}
+                href={makeFilterUrl('tag', activeTag === t.slug ? '' : t.slug)}
+                className={`px-3 py-1 border text-xs font-medium transition-all ${
+                  activeTag === t.slug
+                    ? 'border-primary bg-primary text-background'
+                    : 'border-border text-text-primary hover:border-primary'
+                }`}
+              >
+                {t.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Clear filters */}
+      {(activeCollection || activeTag || activeSize || activeColor) && (
+        <Link
+          href='/products'
+          className='text-xs font-semibold uppercase tracking-widest text-error hover:text-error/80 transition-colors'
+        >
+          Clear Filters ×
+        </Link>
+      )}
+    </div>
+  );
+
   return (
     <div className='bg-background pt-16'>
-      <div className='mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8'>
+      <div className='mx-auto max-w-7xl px-4 py-8 sm:py-12 sm:px-6 lg:px-8'>
         {/* Page header */}
-        <div className='mb-8 border-b border-border pb-6'>
-          <h1 className='text-3xl font-light uppercase tracking-widest text-text-primary'>Shop All</h1>
-          <p className='text-sm text-text-muted mt-1'>{count} product{count !== 1 ? 's' : ''}</p>
+        <div className='mb-6 sm:mb-8 border-b border-border pb-4 sm:pb-6'>
+          <h1 className='text-2xl sm:text-3xl font-light uppercase tracking-widest text-text-primary'>Shop All</h1>
+          <p className='text-xs sm:text-sm text-text-muted mt-1'>{count} product{count !== 1 ? 's' : ''}</p>
         </div>
 
-        <div className='flex flex-col lg:flex-row gap-10'>
+        <div className='flex flex-col lg:flex-row gap-6 lg:gap-10'>
           {/* ─── Sidebar Filters ─── */}
           <aside className='w-full lg:w-56 flex-shrink-0'>
-            <div className='space-y-8'>
-              {/* Sort */}
-              <div>
-                <h3 className='text-xs font-semibold uppercase tracking-widest text-text-primary mb-3 border-b border-border pb-2'>
-                  Sort By
-                </h3>
-                <div className='space-y-0.5'>
-                  {SORT_OPTIONS.map((opt) => (
-                    <FilterLink
-                      key={opt.value}
-                      href={makeFilterUrl('ordering', opt.value)}
-                      isActive={activeOrdering === opt.value}
-                    >
-                      {opt.label}
-                    </FilterLink>
-                  ))}
-                </div>
+            {/* Mobile collapsible filter accordion */}
+            <details className='lg:hidden border border-border p-4 mb-2 group'>
+              <summary className='flex items-center justify-between text-xs font-semibold uppercase tracking-widest text-text-primary cursor-pointer list-none'>
+                <span className='flex items-center gap-2'>
+                  <span>Filters & Sort</span>
+                  {(activeCollection || activeTag || activeSize || activeColor) && (
+                    <span className='h-2 w-2 rounded-full bg-accent' />
+                  )}
+                </span>
+                <span className='text-[10px] text-text-muted group-open:rotate-180 transition-transform'>▼</span>
+              </summary>
+              <div className='pt-4 mt-4 border-t border-border'>
+                {filterContent}
               </div>
+            </details>
 
-              {/* Collections */}
-              {filters.collections.length > 0 && (
-                <div>
-                  <h3 className='text-xs font-semibold uppercase tracking-widest text-text-primary mb-3 border-b border-border pb-2'>
-                    Collection
-                  </h3>
-                  <div className='space-y-0.5'>
-                    <FilterLink href='/products' isActive={!activeCollection}>
-                      All
-                    </FilterLink>
-                    {filters.collections.map((c) => (
-                      <FilterLink
-                        key={c.id}
-                        href={makeFilterUrl('collection', c.slug)}
-                        isActive={activeCollection === c.slug}
-                      >
-                        {c.name}
-                      </FilterLink>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Sizes */}
-              {filters.sizes.length > 0 && (
-                <div>
-                  <h3 className='text-xs font-semibold uppercase tracking-widest text-text-primary mb-3 border-b border-border pb-2'>
-                    Size
-                  </h3>
-                  <div className='flex flex-wrap gap-2'>
-                    {filters.sizes.map((s) => (
-                      <Link
-                        key={s.id}
-                        href={makeFilterUrl('size', activeSize === s.name ? '' : s.name)}
-                        className={`h-8 min-w-[32px] px-2 border text-xs font-medium transition-all flex items-center justify-center ${
-                          activeSize === s.name
-                            ? 'border-primary bg-primary text-background'
-                            : 'border-border text-text-primary hover:border-primary'
-                        }`}
-                      >
-                        {s.name}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Colors */}
-              {filters.colors.length > 0 && (
-                <div>
-                  <h3 className='text-xs font-semibold uppercase tracking-widest text-text-primary mb-3 border-b border-border pb-2'>
-                    Color
-                  </h3>
-                  <div className='flex flex-wrap gap-2'>
-                    {filters.colors.map((c) => (
-                      <Link
-                        key={c.id}
-                        href={makeFilterUrl('color', activeColor === c.name ? '' : c.name)}
-                        title={c.name}
-                        aria-label={c.name}
-                        className={`h-7 w-7 rounded-full border-2 transition-all ${
-                          activeColor === c.name
-                            ? 'border-primary scale-110'
-                            : 'border-transparent hover:border-border'
-                        }`}
-                        style={{ backgroundColor: c.hex_code }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Tags */}
-              {filters.tags.length > 0 && (
-                <div>
-                  <h3 className='text-xs font-semibold uppercase tracking-widest text-text-primary mb-3 border-b border-border pb-2'>
-                    Style
-                  </h3>
-                  <div className='flex flex-wrap gap-2'>
-                    {filters.tags.map((t) => (
-                      <Link
-                        key={t.id}
-                        href={makeFilterUrl('tag', activeTag === t.slug ? '' : t.slug)}
-                        className={`px-3 py-1 border text-xs font-medium transition-all ${
-                          activeTag === t.slug
-                            ? 'border-primary bg-primary text-background'
-                            : 'border-border text-text-primary hover:border-primary'
-                        }`}
-                      >
-                        {t.name}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Clear filters */}
-              {(activeCollection || activeTag || activeSize || activeColor) && (
-                <Link
-                  href='/products'
-                  className='text-xs font-semibold uppercase tracking-widest text-error hover:text-error/80 transition-colors'
-                >
-                  Clear Filters ×
-                </Link>
-              )}
+            {/* Desktop persistent sidebar */}
+            <div className='hidden lg:block'>
+              {filterContent}
             </div>
           </aside>
 

@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export default function HeroSlider({ banners = [] }) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -146,47 +146,22 @@ export default function HeroSlider({ banners = [] }) {
         );
       })}
 
-      {/* Navigation Buttons (Only shown if multiple banners) */}
+      {/* Dots Indicator (Only shown if multiple banners) */}
       {total > 1 && (
-        <>
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              goToPrev();
-            }}
-            aria-label='Previous slide'
-            className='absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 z-30 p-3 bg-black/40 text-background/80 hover:text-background hover:bg-black/70 backdrop-blur-sm border border-white/10 transition-all rounded-full opacity-80 group-hover:opacity-100 hover:scale-105'
-          >
-            <ChevronLeft size={24} />
-          </button>
-
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              goToNext();
-            }}
-            aria-label='Next slide'
-            className='absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-30 p-3 bg-black/40 text-background/80 hover:text-background hover:bg-black/70 backdrop-blur-sm border border-white/10 transition-all rounded-full opacity-80 group-hover:opacity-100 hover:scale-105'
-          >
-            <ChevronRight size={24} />
-          </button>
-
-          {/* Dots Indicator */}
-          <div className='absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2.5 px-4 py-2 bg-black/30 backdrop-blur-sm rounded-full border border-white/10'>
-            {activeBanners.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCurrentIndex(idx)}
-                aria-label={`Go to slide ${idx + 1}`}
-                className={`transition-all duration-300 rounded-full ${
-                  idx === currentIndex
-                    ? 'w-7 h-2 bg-accent'
-                    : 'w-2 h-2 bg-background/50 hover:bg-background/80'
-                }`}
-              />
-            ))}
-          </div>
-        </>
+        <div className='absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex items-center gap-2.5 px-4 py-2 bg-black/30 backdrop-blur-sm rounded-full border border-white/10'>
+          {activeBanners.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentIndex(idx)}
+              aria-label={`Go to slide ${idx + 1}`}
+              className={`transition-all duration-300 rounded-full cursor-pointer ${
+                idx === currentIndex
+                  ? 'w-7 h-2 bg-accent'
+                  : 'w-2 h-2 bg-background/50 hover:bg-background/80'
+              }`}
+            />
+          ))}
+        </div>
       )}
     </section>
   );

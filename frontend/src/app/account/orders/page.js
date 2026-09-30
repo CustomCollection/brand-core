@@ -69,7 +69,7 @@ export default function OrdersPage() {
                     {formatDateShort(order.created_at)} · {order.item_count} item{order.item_count !== 1 ? 's' : ''}
                   </p>
                 </div>
-                <div className='flex items-center gap-4'>
+                <div className='flex items-center justify-between sm:justify-end gap-4 pt-2 sm:pt-0 border-t sm:border-t-0 border-border/40'>
                   <span className='text-sm font-semibold text-text-primary'>
                     {formatPrice(order.total)}
                   </span>
