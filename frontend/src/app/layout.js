@@ -10,6 +10,7 @@ import CartDrawer from '@/components/cart/CartDrawer';
 import { apiGet } from '@/lib/api';
 import { ENDPOINTS } from '@/lib/endpoints';
 import AnnouncementBar from '@/components/layout/AnnouncementBar';
+import RegisterPopup from '@/components/common/RegisterPopup';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
@@ -91,6 +92,7 @@ export default async function RootLayout({ children }) {
                 <main className='min-h-screen'>{children}</main>
                 <Footer initialSiteConfig={config} />
                 <CartDrawer />
+                <RegisterPopup siteConfig={config} />
               </WishlistProvider>
             </CartProvider>
           </ToastProvider>

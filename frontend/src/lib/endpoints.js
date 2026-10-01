@@ -93,6 +93,7 @@ export const ENDPOINTS = {
     HOMEPAGE: '/cms/homepage/',
     SITE_CONFIG: '/cms/site-config/',
     CONTACT: '/cms/contact/',
+    SUBSCRIBE: '/cms/subscribe/',
   },
   SEARCH: '/search/',
 };

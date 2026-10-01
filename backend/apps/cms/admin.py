@@ -9,7 +9,14 @@ contact details, and footer content — all without code changes.
 from django.contrib import admin
 from django.utils.html import format_html
 
-from .models import AnnouncementBar, ContactMessage, HeroBanner, HomepageSection, SiteConfig
+from .models import (
+    AnnouncementBar,
+    ContactMessage,
+    HeroBanner,
+    HomepageSection,
+    NewsletterSubscriber,
+    SiteConfig,
+)
 
 
 @admin.register(SiteConfig)
@@ -36,6 +43,19 @@ class SiteConfigAdmin(admin.ModelAdmin):
         (
             "SEO",
             {"fields": ("meta_title", "meta_description")},
+        ),
+        (
+            "First-Visit Registration Modal",
+            {
+                "fields": (
+                    "register_popup_enabled",
+                    "register_popup_title",
+                    "register_popup_subtitle",
+                    "register_popup_bg_image",
+                    "register_popup_btn_text",
+                ),
+                "description": "Customize the popup prompt shown once to new visitors inviting them to register.",
+            },
         ),
     )
 
@@ -86,5 +106,15 @@ class ContactMessageAdmin(admin.ModelAdmin):
     list_filter = ("is_read", "created_at")
     list_editable = ("is_read",)
     search_fields = ("name", "email", "phone", "subject", "message")
+    readonly_fields = ("created_at", "updated_at")
+    ordering = ("-created_at",)
+
+
+@admin.register(NewsletterSubscriber)
+class NewsletterSubscriberAdmin(admin.ModelAdmin):
+    list_display = ("email", "is_active", "created_at")
+    list_filter = ("is_active", "created_at")
+    list_editable = ("is_active",)
+    search_fields = ("email",)
     readonly_fields = ("created_at", "updated_at")
     ordering = ("-created_at",)

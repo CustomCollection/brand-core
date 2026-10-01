@@ -6,7 +6,8 @@ and drf-spectacular schema/docs endpoints.
 """
 
 from django.contrib import admin
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
 
@@ -14,6 +15,19 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, Spec
 def health_check(request):
     """Simple health check endpoint."""
     return JsonResponse({"status": "healthy", "service": "CustomCollection API"})
+
+
+def favicon_redirect(request):
+    """Redirect /favicon.ico to brand logo or favicon configured in SiteConfig."""
+    try:
+        from apps.cms.models import SiteConfig
+        config = SiteConfig.get_config()
+        fav_url = config.favicon_url or config.logo_url
+        if fav_url:
+            return redirect(fav_url)
+    except Exception:
+        pass
+    return HttpResponse(status=204)
 
 
 api_v1_patterns = [
@@ -33,6 +47,8 @@ api_v1_patterns = [
 ]
 
 urlpatterns = [
+    # Favicon
+    path("favicon.ico", favicon_redirect, name="favicon"),
     # Admin
     path("admin/", admin.site.urls),
     # Health check

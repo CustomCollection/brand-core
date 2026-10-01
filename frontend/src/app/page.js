@@ -33,17 +33,6 @@ export default async function HomePage() {
       {/* ─── HERO BANNER SLIDER ─── */}
       <HeroSlider banners={banners} />
 
-      {/* ─── MARQUEE STRIP ─── */}
-      <div className='overflow-hidden bg-accent py-3'>
-        <div className='flex animate-marquee whitespace-nowrap'>
-          {Array.from({ length: 6 }).map((_, i) => (
-            <span key={i} className='mx-8 text-xs font-semibold uppercase tracking-[0.25em] text-background'>
-              Premium Quality · Print On Demand · Free Shipping Above ₹999 · 100% Cotton
-            </span>
-          ))}
-        </div>
-      </div>
-
       {/* ─── DYNAMIC HOMEPAGE SECTIONS (FROM CMS) ─── */}
       {sections.length > 0 ? (
         sections.map((section) => (

@@ -108,7 +108,7 @@ export default function Header({ initialSiteConfig = null }) {
         className={cn(
           'fixed top-0 left-0 right-0 z-40 transition-all duration-300',
           transparent
-            ? 'bg-transparent border-b border-transparent'
+            ? 'bg-transparent border-b border-transparent hover:bg-white/95 hover:backdrop-blur-md hover:border-neutral-100 hover:shadow-sm'
             : 'bg-white/95 backdrop-blur-md border-b border-neutral-100 shadow-sm'
         )}
       >

@@ -11,12 +11,20 @@ from rest_framework.views import APIView
 from apps.products.models import Product
 from apps.products.serializers import ProductListSerializer
 
-from .models import AnnouncementBar, ContactMessage, HeroBanner, HomepageSection, SiteConfig
+from .models import (
+    AnnouncementBar,
+    ContactMessage,
+    HeroBanner,
+    HomepageSection,
+    NewsletterSubscriber,
+    SiteConfig,
+)
 from .serializers import (
     AnnouncementBarSerializer,
     ContactMessageSerializer,
     HeroBannerSerializer,
     HomepageSectionSerializer,
+    NewsletterSubscriberSerializer,
     SiteConfigSerializer,
 )
 
@@ -108,4 +116,34 @@ class ContactMessageCreateView(APIView):
         return Response(
             {"message": "Thank you! Your message has been received."},
             status=status.HTTP_201_CREATED,
+        )
+
+
+class SubscribeView(APIView):
+    """Newsletter subscription endpoint."""
+
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        email = request.data.get("email", "").strip().lower()
+        if not email or "@" not in email:
+            return Response(
+                {"error": "Please provide a valid email address."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        subscriber, created = NewsletterSubscriber.objects.get_or_create(
+            email=email,
+            defaults={"is_active": True},
+        )
+        if not created and not subscriber.is_active:
+            subscriber.is_active = True
+            subscriber.save(update_fields=["is_active"])
+
+        return Response(
+            {
+                "message": "Thank you for subscribing!" if created else "You are already subscribed to our newsletter.",
+                "created": created,
+            },
+            status=status.HTTP_201_CREATED if created else status.HTTP_200_OK,
         )

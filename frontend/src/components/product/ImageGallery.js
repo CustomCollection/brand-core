@@ -23,9 +23,9 @@ export default function ImageGallery({ images, productName }) {
   const next = () => setActiveIndex((i) => (i === images.length - 1 ? 0 : i + 1));
 
   return (
-    <div className='flex flex-col gap-4 lg:flex-row-reverse lg:gap-4'>
+    <div className='flex flex-col gap-4 lg:flex-row-reverse lg:gap-4 lg:sticky lg:top-28'>
       {/* Main image */}
-      <div className='relative flex-1 overflow-hidden bg-surface'>
+      <div className='relative flex-1 overflow-hidden'>
         <div
           className='aspect-[3/4] relative cursor-zoom-in'
           onClick={() => setIsZoomed(!isZoomed)}

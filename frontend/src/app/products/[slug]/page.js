@@ -83,7 +83,7 @@ export default async function ProductDetailPage({ params }) {
         </nav>
 
         {/* Product grid */}
-        <div className='grid grid-cols-1 gap-12 lg:grid-cols-2'>
+        <div className='grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-start'>
           {/* Images */}
           <ImageGallery
             images={product.images || (product.primary_image ? [{ id: 0, image_url: product.primary_image, alt_text: product.name, is_primary: true, sort_order: 0 }] : [])}

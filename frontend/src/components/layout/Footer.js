@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Mail, Phone, MessageSquare } from 'lucide-react';
-import { apiGet } from '@/lib/api';
+import { Mail, Phone, MessageSquare, ArrowRight, Check } from 'lucide-react';
+import { apiGet, apiPost } from '@/lib/api';
 import { ENDPOINTS } from '@/lib/endpoints';
 import ContactModal from '@/components/cms/ContactModal';
 
@@ -22,6 +22,30 @@ export default function Footer({ initialSiteConfig = null }) {
   const [config, setConfig] = useState(initialSiteConfig);
   const [collections, setCollections] = useState([]);
   const [isContactOpen, setIsContactOpen] = useState(false);
+  const [subscriberEmail, setSubscriberEmail] = useState('');
+  const [submittingSub, setSubmittingSub] = useState(false);
+  const [subMessage, setSubMessage] = useState(null);
+  const [subError, setSubError] = useState(null);
+
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    if (!subscriberEmail || !subscriberEmail.includes('@')) {
+      setSubError('Please enter a valid email address');
+      return;
+    }
+    setSubmittingSub(true);
+    setSubError(null);
+    setSubMessage(null);
+    try {
+      const res = await apiPost(ENDPOINTS.CMS.SUBSCRIBE, { email: subscriberEmail });
+      setSubMessage(res?.message || 'Thank you for subscribing!');
+      setSubscriberEmail('');
+    } catch (err) {
+      setSubError(err?.message || 'Subscription failed. Please try again.');
+    } finally {
+      setSubmittingSub(false);
+    }
+  };
 
   useEffect(() => {
     const handleOpenContact = () => setIsContactOpen(true);
@@ -195,6 +219,50 @@ export default function Footer({ initialSiteConfig = null }) {
                   </li>
                 )}
               </ul>
+
+              {/* ─── Newsletter / Get In Touch Box (Reference: media_1790832947917.png) ─── */}
+              <div className='pt-5 border-t border-background/15 mt-5'>
+                <h4 className='text-xs font-semibold uppercase tracking-widest text-background mb-2'>
+                  Get In Touch
+                </h4>
+                <p className='text-xs text-background/60 mb-2.5 leading-relaxed'>
+                  Subscribe for special drops & updates.
+                </p>
+                <form onSubmit={handleSubscribe} className='relative max-w-xs'>
+                  <div className='relative flex items-center border border-white/20 bg-black/25 hover:border-white/40 focus-within:border-accent transition-colors'>
+                    <input
+                      type='email'
+                      value={subscriberEmail}
+                      onChange={(e) => {
+                        setSubscriberEmail(e.target.value);
+                        if (subError) setSubError(null);
+                        if (subMessage) setSubMessage(null);
+                      }}
+                      placeholder='Email'
+                      required
+                      className='w-full bg-transparent px-3 py-2 text-xs text-white placeholder-white/40 focus:outline-none pr-9'
+                    />
+                    <button
+                      type='submit'
+                      disabled={submittingSub}
+                      className='absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 flex items-center justify-center text-white/70 hover:text-white transition-colors disabled:opacity-50 cursor-pointer'
+                      aria-label='Subscribe'
+                    >
+                      <ArrowRight size={14} />
+                    </button>
+                  </div>
+                  {subMessage && (
+                    <p className='mt-2 text-[11px] text-emerald-400 flex items-center gap-1 font-medium'>
+                      <Check size={12} /> {subMessage}
+                    </p>
+                  )}
+                  {subError && (
+                    <p className='mt-2 text-[11px] text-rose-400 font-medium'>
+                      {subError}
+                    </p>
+                  )}
+                </form>
+              </div>
             </div>
           </div>
 

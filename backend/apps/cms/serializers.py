@@ -2,7 +2,14 @@
 
 from rest_framework import serializers
 
-from .models import AnnouncementBar, ContactMessage, HeroBanner, HomepageSection, SiteConfig
+from .models import (
+    AnnouncementBar,
+    ContactMessage,
+    HeroBanner,
+    HomepageSection,
+    NewsletterSubscriber,
+    SiteConfig,
+)
 
 
 class SiteConfigSerializer(serializers.ModelSerializer):
@@ -24,6 +31,11 @@ class SiteConfigSerializer(serializers.ModelSerializer):
             "footer_text",
             "meta_title",
             "meta_description",
+            "register_popup_enabled",
+            "register_popup_title",
+            "register_popup_subtitle",
+            "register_popup_bg_image",
+            "register_popup_btn_text",
         ]
 
 
@@ -78,4 +90,11 @@ class ContactMessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactMessage
         fields = ["id", "name", "email", "phone", "subject", "message", "created_at"]
+        read_only_fields = ["id", "created_at"]
+
+
+class NewsletterSubscriberSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NewsletterSubscriber
+        fields = ["id", "email", "created_at"]
         read_only_fields = ["id", "created_at"]

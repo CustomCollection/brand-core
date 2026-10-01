@@ -58,6 +58,36 @@ class SiteConfig(models.Model):
         default="Shop premium T-shirts at CustomCollection. Quality designs, crafted just for you.",
     )
 
+    # First-Visit Registration Popup
+    register_popup_enabled = models.BooleanField(
+        default=True,
+        help_text="Show first-visit registration reminder popup to unauthenticated visitors.",
+    )
+    register_popup_title = models.CharField(
+        max_length=200,
+        blank=True,
+        default="JOIN THE CLUB & GET 10% OFF",
+        help_text="Catchy headline for the first-visit registration prompt.",
+    )
+    register_popup_subtitle = models.CharField(
+        max_length=300,
+        blank=True,
+        default="Sign up now to get early access to drops, exclusive collections, and member-only discounts.",
+        help_text="Subtext or offer details shown on the popup.",
+    )
+    register_popup_bg_image = models.URLField(
+        max_length=500,
+        blank=True,
+        default="",
+        help_text="Background image URL for the registration popup modal.",
+    )
+    register_popup_btn_text = models.CharField(
+        max_length=50,
+        blank=True,
+        default="CREATE AN ACCOUNT",
+        help_text="Button text redirecting user to the register page.",
+    )
+
     class Meta:
         verbose_name = "site configuration"
         verbose_name_plural = "site configuration"
@@ -209,3 +239,20 @@ class ContactMessage(TimeStampedModel):
 
     def __str__(self):
         return f"{self.name} ({self.email}) - {self.subject or 'Inquiry'}"
+
+
+class NewsletterSubscriber(TimeStampedModel):
+    """
+    Subscribers who joined the newsletter / email updates via footer.
+    """
+
+    email = models.EmailField(unique=True)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "newsletter subscriber"
+        verbose_name_plural = "newsletter subscribers"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return self.email
