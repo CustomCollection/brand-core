@@ -90,16 +90,30 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 
 # Database
-DATABASE_URL = config("DATABASE_URL", default=None)
-if DATABASE_URL:
+_raw_db_url = config("DATABASE_URL", default="").strip()
+if _raw_db_url:
     import dj_database_url
-    DATABASES = {
-        "default": dj_database_url.config(
-            default=DATABASE_URL,
-            conn_max_age=600,
-            conn_health_checks=True,
-        )
-    }
+
+    # Strip surrounding quotes if present
+    if (_raw_db_url.startswith('"') and _raw_db_url.endswith('"')) or (
+        _raw_db_url.startswith("'") and _raw_db_url.endswith("'")
+    ):
+        _raw_db_url = _raw_db_url[1:-1].strip()
+
+    # Strip leading 'psql ' if user copied psql CLI command by mistake
+    if _raw_db_url.startswith("psql "):
+        _raw_db_url = _raw_db_url[5:].strip().strip("'\"")
+
+    db_config = dj_database_url.parse(
+        _raw_db_url,
+        conn_max_age=600,
+        conn_health_checks=True,
+        ssl_require=True,
+    )
+    if not db_config.get("ENGINE"):
+        db_config["ENGINE"] = "django.db.backends.postgresql"
+
+    DATABASES = {"default": db_config}
 else:
     DATABASES = {
         "default": {
