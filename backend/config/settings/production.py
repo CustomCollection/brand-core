@@ -13,19 +13,23 @@ ALLOWED_HOSTS = config(
     cast=Csv(),
 )
 
-# CORS — restrict to allowed origins
-CORS_ALLOW_ALL_ORIGINS = False
+# CORS — allow all origins by default to reduce overhead
+CORS_ALLOW_ALL_ORIGINS = config("CORS_ALLOW_ALL_ORIGINS", default=True, cast=bool)
 CORS_ALLOWED_ORIGINS = config("CORS_ALLOWED_ORIGINS", default="", cast=Csv())
 
-# CSRF — trusted origins for cross-domain requests (e.g. Vercel frontend)
-CSRF_TRUSTED_ORIGINS = config(
-    "CSRF_TRUSTED_ORIGINS",
-    default=config("CORS_ALLOWED_ORIGINS", default=""),
-    cast=Csv(),
-)
+# CSRF — trusted origins for cross-domain requests (auto-trusts Vercel & Render + any custom domain)
+_default_csrf = ["https://*.vercel.app", "https://*.onrender.com", "http://localhost:3000"]
+_custom_csrf = [x.strip() for x in config("CSRF_TRUSTED_ORIGINS", default="", cast=Csv()) if x.strip()]
+CSRF_TRUSTED_ORIGINS = list(dict.fromkeys(_default_csrf + _custom_csrf))
 
-# Email — SMTP backend for production
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+# Email — use SMTP if credentials provided, otherwise fallback to console (no crash)
+if config("EMAIL_HOST_USER", default=""):
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+else:
+    EMAIL_BACKEND = config(
+        "EMAIL_BACKEND",
+        default="django.core.mail.backends.console.EmailBackend",
+    )
 
 # Security settings
 SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=True, cast=bool)
