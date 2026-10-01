@@ -3,6 +3,8 @@ Development-specific Django settings for CustomCollection.
 """
 from decouple import config
 
+from .base import *  # noqa: F401,F403
+
 # Debug
 DEBUG = True
 
