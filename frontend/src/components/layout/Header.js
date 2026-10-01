@@ -183,14 +183,22 @@ export default function Header({ initialSiteConfig = null }) {
               </nav>
             </div>
 
-            {/* Center: Brand Name (Clean, elegant & readable) */}
+            {/* Center: Brand Logo / Name */}
             <Link
               href='/'
               className='absolute left-1/2 -translate-x-1/2 flex items-center justify-center transition-transform hover:scale-105'
             >
-              <span className='text-lg sm:text-2xl font-light uppercase tracking-[0.2em] text-text-primary'>
-                CustomCollection
-              </span>
+              {siteConfig?.logo_url || siteConfig?.logo ? (
+                <img
+                  src={siteConfig.logo_url || siteConfig.logo}
+                  alt={siteConfig.brand_name || 'CustomCollection'}
+                  className='h-8 sm:h-9 md:h-10 w-auto max-w-[140px] sm:max-w-[180px] object-contain'
+                />
+              ) : (
+                <span className='text-lg sm:text-2xl font-light uppercase tracking-[0.2em] text-text-primary'>
+                  {siteConfig?.brand_name || 'CustomCollection'}
+                </span>
+              )}
             </Link>
 
             {/* Right: Icons */}
