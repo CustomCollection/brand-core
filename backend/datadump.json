@@ -1,0 +1,2184 @@
+[
+{
+  "model": "sessions.session",
+  "pk": "rm4lfcqy8wowtsma82w9ixl72dgst1an",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGlmJs_4sJT1nsHbXDgkgW4qTCnF3iJQC2jcz76UibesUt5aXOCd1Vr06_W5M8shlB-lO5Va11LIuM-td0Qdt-lpTfl4O9-9gojZ9a9_BKJABDGZEBgPcB0ZxMFBI3juxNpgwStej0IDCZEzniNj6EbxX7w_QPjeB:1xBsd1:RwTpNYPBFk_8a5mIYBVnCCVBykZxpEG-cy98haTkUz4",
+    "expire_date": "2026-10-14T11:37:39.951Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "u1211olu8jqzuwtngrg3k90slidrusav",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGlmJs_4sJT1nsHbXDgkgW4qTCnF3iJQC2jcz76UibesUt5aXOCd1Vr06_W5M8shlB-lO5Va11LIuM-td0Qdt-lpTfl4O9-9gojZ9a9_BKJABDGZEBgPcB0ZxMFBI3juxNpgwStej0IDCZEzniNj6EbxX7w_QPjeB:1x6mYb:mDTKBF92I9Zf5kRswX8MGR9qrzQyGdC8Hi17PV8P65c",
+    "expire_date": "2026-09-30T10:08:01.820Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "uf2x8ggt9imn9dp93hvmejixsxrrf5d7",
+  "fields": {
+    "session_data": ".eJxVjDsOwjAQBe_iGlmJs_4sJT1nsHbXDgkgW4qTCnF3iJQC2jcz76UibesUt5aXOCd1Vr06_W5M8shlB-lO5Va11LIuM-td0Qdt-lpTfl4O9-9gojZ9a9_BKJABDGZEBgPcB0ZxMFBI3juxNpgwStej0IDCZEzniNj6EbxX7w_QPjeB:1xCALA:ncJxcCFYLNxXe_NxxFeYRRXwnzsQlPnt3-oOgN1_PCM",
+    "expire_date": "2026-10-15T06:32:24.063Z"
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$870000$zGHenMZgYhIrX8ef6PweKr$AMjx0KZ0SYOgeT/G7UevXLkLT6wxLlsJQJwY4hJuOjU=",
+    "last_login": "2026-10-01T06:32:24.059Z",
+    "is_superuser": true,
+    "email": "admin@customcollection.com",
+    "first_name": "Admin",
+    "last_name": "User",
+    "is_email_verified": true,
+    "is_active": true,
+    "is_staff": true,
+    "date_joined": "2026-09-16T10:01:00.824Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$870000$WU2ak3P17vLAOMATSZy5Es$W1otZQDnWyBMTYvTRg4d7g/r4H5M8o24DgEvBtyp1Y4=",
+    "last_login": null,
+    "is_superuser": false,
+    "email": "garikinakarthik459@gmail.com",
+    "first_name": "Karthik",
+    "last_name": "Garikina",
+    "is_email_verified": true,
+    "is_active": true,
+    "is_staff": false,
+    "date_joined": "2026-09-16T10:42:40.420Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$870000$Nx6hOiqZfB0hvS5f26xr2L$YyMxePmaXTe7QNmTrO9HxHKGVEtP4CrZriG5VivsCQ4=",
+    "last_login": null,
+    "is_superuser": false,
+    "email": "23p31a4222@acet.ac.in",
+    "first_name": "Karthik",
+    "last_name": "Garikina",
+    "is_email_verified": true,
+    "is_active": true,
+    "is_staff": false,
+    "date_joined": "2026-09-22T07:36:06.471Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.user",
+  "fields": {
+    "password": "pbkdf2_sha256$870000$OwhZiAoSEIuiLnU0qKBPbK$pDm8PdItutbgciU8wU4McRZs/zVRAn0TaNz/RDsbLr8=",
+    "last_login": null,
+    "is_superuser": false,
+    "email": "nakkashyam205@gmail.com",
+    "first_name": "Syam",
+    "last_name": "Nakka",
+    "is_email_verified": true,
+    "is_active": true,
+    "is_staff": false,
+    "date_joined": "2026-09-24T07:25:25.093Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "accounts.profile",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-16T10:01:00.831Z",
+    "updated_at": "2026-09-16T10:01:00.831Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "phone": null,
+    "avatar_url": null
+  }
+},
+{
+  "model": "accounts.profile",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-09-16T10:42:40.425Z",
+    "updated_at": "2026-09-16T10:42:40.425Z",
+    "user": [
+      "garikinakarthik459@gmail.com"
+    ],
+    "phone": null,
+    "avatar_url": null
+  }
+},
+{
+  "model": "accounts.profile",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-09-22T07:36:06.482Z",
+    "updated_at": "2026-09-22T07:36:06.482Z",
+    "user": [
+      "23p31a4222@acet.ac.in"
+    ],
+    "phone": null,
+    "avatar_url": null
+  }
+},
+{
+  "model": "accounts.profile",
+  "pk": 6,
+  "fields": {
+    "created_at": "2026-09-24T07:25:25.103Z",
+    "updated_at": "2026-09-24T07:25:25.103Z",
+    "user": [
+      "nakkashyam205@gmail.com"
+    ],
+    "phone": null,
+    "avatar_url": null
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-17T05:40:52.536Z",
+    "updated_at": "2026-09-17T05:40:52.536Z",
+    "user": [
+      "garikinakarthik459@gmail.com"
+    ],
+    "full_name": "Garikina Karthik",
+    "phone": "07842129339",
+    "address_line_1": "Chollangi",
+    "address_line_2": "Chollangi peta",
+    "city": "Kakinada",
+    "state": "Andhra Pradesh",
+    "pincode": "533461",
+    "is_default": true
+  }
+},
+{
+  "model": "accounts.address",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-22T07:39:37.174Z",
+    "updated_at": "2026-09-22T07:39:37.174Z",
+    "user": [
+      "23p31a4222@acet.ac.in"
+    ],
+    "full_name": "Garikina Karthik",
+    "phone": "07842129339",
+    "address_line_1": "Chollangi",
+    "address_line_2": "Chollangi peta",
+    "city": "Kakinada",
+    "state": "Andhra Pradesh",
+    "pincode": "533461",
+    "is_default": true
+  }
+},
+{
+  "model": "products.size",
+  "pk": 1,
+  "fields": {
+    "name": "XS",
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.size",
+  "pk": 2,
+  "fields": {
+    "name": "S",
+    "sort_order": 2
+  }
+},
+{
+  "model": "products.size",
+  "pk": 3,
+  "fields": {
+    "name": "M",
+    "sort_order": 3
+  }
+},
+{
+  "model": "products.size",
+  "pk": 4,
+  "fields": {
+    "name": "L",
+    "sort_order": 4
+  }
+},
+{
+  "model": "products.size",
+  "pk": 5,
+  "fields": {
+    "name": "XL",
+    "sort_order": 5
+  }
+},
+{
+  "model": "products.size",
+  "pk": 6,
+  "fields": {
+    "name": "XXL",
+    "sort_order": 6
+  }
+},
+{
+  "model": "products.color",
+  "pk": 1,
+  "fields": {
+    "name": "Washed Black",
+    "hex_code": "#1A1A1A",
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.color",
+  "pk": 2,
+  "fields": {
+    "name": "Vintage White",
+    "hex_code": "#F5F5F0",
+    "sort_order": 2
+  }
+},
+{
+  "model": "products.color",
+  "pk": 3,
+  "fields": {
+    "name": "Charcoal Grey",
+    "hex_code": "#36454F",
+    "sort_order": 3
+  }
+},
+{
+  "model": "products.color",
+  "pk": 4,
+  "fields": {
+    "name": "Forest Green",
+    "hex_code": "#2D4A3E",
+    "sort_order": 4
+  }
+},
+{
+  "model": "products.color",
+  "pk": 5,
+  "fields": {
+    "name": "Navy Blue",
+    "hex_code": "#1B263B",
+    "sort_order": 5
+  }
+},
+{
+  "model": "products.color",
+  "pk": 6,
+  "fields": {
+    "name": "Sand Beige",
+    "hex_code": "#D2B48C",
+    "sort_order": 6
+  }
+},
+{
+  "model": "products.product",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.360Z",
+    "updated_at": "2026-09-17T05:13:45.366Z",
+    "name": "Tokyo Cyber Heavyweight Tee",
+    "slug": "tokyo-cyber-heavyweight-tee",
+    "description": "Designed for the modern streetwear enthusiast. Crafted from 240 GSM 100% combed cotton, featuring a futuristic Tokyo cyber neon graphic with high-definition DTG print that will never crack or fade.",
+    "short_description": "240 GSM premium oversized cyberpunk graphic tee.",
+    "price": "1499.00",
+    "discount_price": "1199.00",
+    "is_featured": true,
+    "is_best_seller": true,
+    "is_new_arrival": true,
+    "status": "published",
+    "wash_care": "Machine wash cold inside out with like colors. Do not iron directly on print. Tumble dry low.",
+    "shipping_info": "Printed on demand with care. Dispatches in 24-48 hours. Free shipping across India.",
+    "meta_title": "",
+    "meta_description": "",
+    "collections": [
+      1,
+      3,
+      4
+    ],
+    "tags": [
+      3,
+      2,
+      9,
+      7
+    ],
+    "sizes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "colors": [
+      1,
+      3
+    ]
+  }
+},
+{
+  "model": "products.product",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.421Z",
+    "updated_at": "2026-09-17T05:13:45.423Z",
+    "name": "Essential Minimalist Boxy Tee",
+    "slug": "essential-minimalist-boxy-tee",
+    "description": "Clean lines and timeless luxury. Features a dropped shoulder boxy fit silhouette made from organic French terry cotton with subtle tonal embroidered branding on the chest.",
+    "short_description": "Clean boxy fit tee with tonal embroidered detail.",
+    "price": "1299.00",
+    "discount_price": "999.00",
+    "is_featured": true,
+    "is_best_seller": false,
+    "is_new_arrival": true,
+    "status": "published",
+    "wash_care": "Machine wash cold inside out with like colors. Do not iron directly on print. Tumble dry low.",
+    "shipping_info": "Printed on demand with care. Dispatches in 24-48 hours. Free shipping across India.",
+    "meta_title": "",
+    "meta_description": "",
+    "collections": [
+      1,
+      2,
+      5
+    ],
+    "tags": [
+      6,
+      1,
+      7
+    ],
+    "sizes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "colors": [
+      1,
+      2,
+      6
+    ]
+  }
+},
+{
+  "model": "products.product",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.457Z",
+    "updated_at": "2026-09-17T05:13:45.460Z",
+    "name": "Vintage Acid Wash Oversized Tee",
+    "slug": "vintage-acid-wash-oversized-tee",
+    "description": "Hand-distressed vintage mineral wash gives every single piece a 1-of-1 aesthetic. Ultra-soft feel with relaxed drop shoulders and ribbed crewneck.",
+    "short_description": "Mineral-washed vintage streetwear oversized tee.",
+    "price": "1699.00",
+    "discount_price": "1399.00",
+    "is_featured": true,
+    "is_best_seller": true,
+    "is_new_arrival": false,
+    "status": "published",
+    "wash_care": "Machine wash cold inside out with like colors. Do not iron directly on print. Tumble dry low.",
+    "shipping_info": "Printed on demand with care. Dispatches in 24-48 hours. Free shipping across India.",
+    "meta_title": "",
+    "meta_description": "",
+    "collections": [
+      1,
+      2,
+      3
+    ],
+    "tags": [
+      8,
+      4,
+      7,
+      5
+    ],
+    "sizes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "colors": [
+      1,
+      3
+    ]
+  }
+},
+{
+  "model": "products.product",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.498Z",
+    "updated_at": "2026-09-17T05:13:45.503Z",
+    "name": "Retro Sunset Graphic Tee",
+    "slug": "retro-sunset-graphic-tee",
+    "description": "80s inspired retro typography and sunburst back print. Breathable 200 GSM ring-spun cotton for all-day comfort and effortless styling.",
+    "short_description": "Retro nostalgic back-print graphic tee.",
+    "price": "1199.00",
+    "discount_price": "899.00",
+    "is_featured": false,
+    "is_best_seller": true,
+    "is_new_arrival": true,
+    "status": "published",
+    "wash_care": "Machine wash cold inside out with like colors. Do not iron directly on print. Tumble dry low.",
+    "shipping_info": "Printed on demand with care. Dispatches in 24-48 hours. Free shipping across India.",
+    "meta_title": "",
+    "meta_description": "",
+    "collections": [
+      1,
+      4
+    ],
+    "tags": [
+      6,
+      2,
+      5
+    ],
+    "sizes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "colors": [
+      2,
+      5
+    ]
+  }
+},
+{
+  "model": "products.product",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.544Z",
+    "updated_at": "2026-09-17T05:13:45.547Z",
+    "name": "Monochrome Japanese Kanji Tee",
+    "slug": "monochrome-japanese-kanji-tee",
+    "description": "Artisan brushed Kanji artwork meaning 'Courage & Harmony'. High-density screen printed on premium heavyweight matte cotton.",
+    "short_description": "Kanji back-art premium heavyweight tee.",
+    "price": "1399.00",
+    "discount_price": "1099.00",
+    "is_featured": true,
+    "is_best_seller": true,
+    "is_new_arrival": true,
+    "status": "published",
+    "wash_care": "Machine wash cold inside out with like colors. Do not iron directly on print. Tumble dry low.",
+    "shipping_info": "Printed on demand with care. Dispatches in 24-48 hours. Free shipping across India.",
+    "meta_title": "",
+    "meta_description": "",
+    "collections": [
+      1,
+      3,
+      4
+    ],
+    "tags": [
+      3,
+      2,
+      7
+    ],
+    "sizes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "colors": [
+      1,
+      2
+    ]
+  }
+},
+{
+  "model": "products.product",
+  "pk": 6,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.583Z",
+    "updated_at": "2026-09-17T05:13:45.586Z",
+    "name": "Pastel Sand Relaxed Tee",
+    "slug": "pastel-sand-relaxed-tee",
+    "description": "Subtle earthy tones crafted from organic combed bio-washed cotton. Smooth hand feel, pre-shrunk fabric that holds shape after repeated washing.",
+    "short_description": "Earth tone organic bio-washed relaxed tee.",
+    "price": "1099.00",
+    "discount_price": "849.00",
+    "is_featured": false,
+    "is_best_seller": true,
+    "is_new_arrival": false,
+    "status": "published",
+    "wash_care": "Machine wash cold inside out with like colors. Do not iron directly on print. Tumble dry low.",
+    "shipping_info": "Printed on demand with care. Dispatches in 24-48 hours. Free shipping across India.",
+    "meta_title": "",
+    "meta_description": "",
+    "collections": [
+      2,
+      5
+    ],
+    "tags": [
+      6,
+      1
+    ],
+    "sizes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "colors": [
+      2,
+      6
+    ]
+  }
+},
+{
+  "model": "products.product",
+  "pk": 7,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.631Z",
+    "updated_at": "2026-09-17T05:13:45.635Z",
+    "name": "Cyber Mecha Blueprint Tee",
+    "slug": "cyber-mecha-blueprint-tee",
+    "description": "Detailed mechanical anime schematic print across the upper back with small chest insignia. 240 GSM heavy cotton construction.",
+    "short_description": "Mecha blueprint artwork oversized tee.",
+    "price": "1599.00",
+    "discount_price": "1299.00",
+    "is_featured": true,
+    "is_best_seller": false,
+    "is_new_arrival": true,
+    "status": "published",
+    "wash_care": "Machine wash cold inside out with like colors. Do not iron directly on print. Tumble dry low.",
+    "shipping_info": "Printed on demand with care. Dispatches in 24-48 hours. Free shipping across India.",
+    "meta_title": "",
+    "meta_description": "",
+    "collections": [
+      1,
+      3,
+      4
+    ],
+    "tags": [
+      3,
+      2,
+      9
+    ],
+    "sizes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "colors": [
+      1,
+      4
+    ]
+  }
+},
+{
+  "model": "products.product",
+  "pk": 8,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.688Z",
+    "updated_at": "2026-09-17T05:13:45.692Z",
+    "name": "Classic Raw White Heavyweight Tee",
+    "slug": "classic-raw-white-heavyweight-tee",
+    "description": "The quintessential white tee perfected. Untreated raw white cotton with subtle natural texture, thick collar band, and a structured drape.",
+    "short_description": "Heavyweight structured essential white tee.",
+    "price": "1199.00",
+    "discount_price": "899.00",
+    "is_featured": true,
+    "is_best_seller": true,
+    "is_new_arrival": false,
+    "status": "published",
+    "wash_care": "Machine wash cold inside out with like colors. Do not iron directly on print. Tumble dry low.",
+    "shipping_info": "Printed on demand with care. Dispatches in 24-48 hours. Free shipping across India.",
+    "meta_title": "",
+    "meta_description": "",
+    "collections": [
+      1,
+      2,
+      5
+    ],
+    "tags": [
+      6,
+      1
+    ],
+    "sizes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "colors": [
+      1,
+      2
+    ]
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.411Z",
+    "updated_at": "2026-09-17T05:13:45.411Z",
+    "product": 1,
+    "image_url": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Tokyo Cyber Front View",
+    "is_primary": true,
+    "sort_order": 0
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.414Z",
+    "updated_at": "2026-09-17T05:13:45.414Z",
+    "product": 1,
+    "image_url": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Tokyo Cyber Lifestyle",
+    "is_primary": false,
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.417Z",
+    "updated_at": "2026-09-17T05:13:45.417Z",
+    "product": 1,
+    "image_url": "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Tokyo Cyber Detail",
+    "is_primary": false,
+    "sort_order": 2
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.448Z",
+    "updated_at": "2026-09-17T05:13:45.448Z",
+    "product": 2,
+    "image_url": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Minimalist Boxy Front",
+    "is_primary": true,
+    "sort_order": 0
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.451Z",
+    "updated_at": "2026-09-17T05:13:45.451Z",
+    "product": 2,
+    "image_url": "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Minimalist Boxy Fit",
+    "is_primary": false,
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 6,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.453Z",
+    "updated_at": "2026-09-17T05:13:45.453Z",
+    "product": 2,
+    "image_url": "https://images.unsplash.com/photo-1581655353564-df123a1eb820?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Minimalist Detail",
+    "is_primary": false,
+    "sort_order": 2
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 7,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.486Z",
+    "updated_at": "2026-09-17T05:13:45.486Z",
+    "product": 3,
+    "image_url": "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Vintage Acid Wash Front",
+    "is_primary": true,
+    "sort_order": 0
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 8,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.490Z",
+    "updated_at": "2026-09-17T05:13:45.490Z",
+    "product": 3,
+    "image_url": "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Vintage Acid Wash Angle",
+    "is_primary": false,
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 9,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.493Z",
+    "updated_at": "2026-09-17T05:13:45.493Z",
+    "product": 3,
+    "image_url": "https://images.unsplash.com/photo-1503342394128-c104d54dba01?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Vintage Acid Wash Fit",
+    "is_primary": false,
+    "sort_order": 2
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 10,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.534Z",
+    "updated_at": "2026-09-17T05:13:45.534Z",
+    "product": 4,
+    "image_url": "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Retro Sunset Graphic Front",
+    "is_primary": true,
+    "sort_order": 0
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 11,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.537Z",
+    "updated_at": "2026-09-17T05:13:45.537Z",
+    "product": 4,
+    "image_url": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Retro Sunset Graphic Angle",
+    "is_primary": false,
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 12,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.540Z",
+    "updated_at": "2026-09-17T05:13:45.540Z",
+    "product": 4,
+    "image_url": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Retro Sunset Graphic Fit",
+    "is_primary": false,
+    "sort_order": 2
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 13,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.574Z",
+    "updated_at": "2026-09-17T05:13:45.574Z",
+    "product": 5,
+    "image_url": "https://images.unsplash.com/photo-1562157873-818bc0726f68?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Kanji Tee Front",
+    "is_primary": true,
+    "sort_order": 0
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 14,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.576Z",
+    "updated_at": "2026-09-17T05:13:45.576Z",
+    "product": 5,
+    "image_url": "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Kanji Tee Close-up",
+    "is_primary": false,
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 15,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.579Z",
+    "updated_at": "2026-09-17T05:13:45.579Z",
+    "product": 5,
+    "image_url": "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Kanji Tee Model",
+    "is_primary": false,
+    "sort_order": 2
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 16,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.619Z",
+    "updated_at": "2026-09-17T05:13:45.619Z",
+    "product": 6,
+    "image_url": "https://images.unsplash.com/photo-1554568218-0f1715e72254?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Pastel Sand Tee Front",
+    "is_primary": true,
+    "sort_order": 0
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 17,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.622Z",
+    "updated_at": "2026-09-17T05:13:45.622Z",
+    "product": 6,
+    "image_url": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Pastel Sand Tee Side",
+    "is_primary": false,
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 18,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.625Z",
+    "updated_at": "2026-09-17T05:13:45.625Z",
+    "product": 6,
+    "image_url": "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Pastel Sand Tee Fabric",
+    "is_primary": false,
+    "sort_order": 2
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 19,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.673Z",
+    "updated_at": "2026-09-17T05:13:45.673Z",
+    "product": 7,
+    "image_url": "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Cyber Mecha Front",
+    "is_primary": true,
+    "sort_order": 0
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 20,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.677Z",
+    "updated_at": "2026-09-17T05:13:45.677Z",
+    "product": 7,
+    "image_url": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Cyber Mecha Back Print",
+    "is_primary": false,
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 21,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.681Z",
+    "updated_at": "2026-09-17T05:13:45.681Z",
+    "product": 7,
+    "image_url": "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Cyber Mecha Lifestyle",
+    "is_primary": false,
+    "sort_order": 2
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 22,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.731Z",
+    "updated_at": "2026-09-17T05:13:45.731Z",
+    "product": 8,
+    "image_url": "https://images.unsplash.com/photo-1581655353564-df123a1eb820?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Raw White Front",
+    "is_primary": true,
+    "sort_order": 0
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 23,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.735Z",
+    "updated_at": "2026-09-17T05:13:45.735Z",
+    "product": 8,
+    "image_url": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Raw White Angle",
+    "is_primary": false,
+    "sort_order": 1
+  }
+},
+{
+  "model": "products.productimage",
+  "pk": 24,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.738Z",
+    "updated_at": "2026-09-17T05:13:45.738Z",
+    "product": 8,
+    "image_url": "https://images.unsplash.com/photo-1554568218-0f1715e72254?q=80&w=1000&auto=format&fit=crop",
+    "alt_text": "Raw White Texture",
+    "is_primary": false,
+    "sort_order": 2
+  }
+},
+{
+  "model": "collections.collection",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.242Z",
+    "updated_at": "2026-09-29T10:12:36.669Z",
+    "name": "Men",
+    "slug": "men",
+    "description": "Curated heavyweight tees and essentials engineered for men.",
+    "image_url": "https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?q=80&w=1000&auto=format&fit=crop",
+    "is_active": true,
+    "sort_order": 1,
+    "meta_title": "",
+    "meta_description": ""
+  }
+},
+{
+  "model": "collections.collection",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.255Z",
+    "updated_at": "2026-09-17T05:13:45.259Z",
+    "name": "Women",
+    "slug": "women",
+    "description": "Relaxed fit and oversized silhouettes crafted for effortless style.",
+    "image_url": "https://images.unsplash.com/photo-1554568218-0f1715e72254?q=80&w=1000&auto=format&fit=crop",
+    "is_active": true,
+    "sort_order": 2,
+    "meta_title": "",
+    "meta_description": ""
+  }
+},
+{
+  "model": "collections.collection",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.264Z",
+    "updated_at": "2026-09-17T05:13:45.269Z",
+    "name": "Oversized",
+    "slug": "oversized",
+    "description": "Relaxed drop-shoulder cuts made from heavy 240 GSM cotton.",
+    "image_url": "https://images.unsplash.com/photo-1576566588028-4147f3842f27?q=80&w=1000&auto=format&fit=crop",
+    "is_active": true,
+    "sort_order": 3,
+    "meta_title": "",
+    "meta_description": ""
+  }
+},
+{
+  "model": "collections.collection",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.274Z",
+    "updated_at": "2026-09-17T05:13:45.278Z",
+    "name": "Graphic Tees",
+    "slug": "graphic-tees",
+    "description": "Original illustrated prints and street art aesthetics.",
+    "image_url": "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=1000&auto=format&fit=crop",
+    "is_active": true,
+    "sort_order": 4,
+    "meta_title": "",
+    "meta_description": ""
+  }
+},
+{
+  "model": "collections.collection",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.284Z",
+    "updated_at": "2026-09-17T05:13:45.288Z",
+    "name": "Minimalist",
+    "slug": "minimalist",
+    "description": "Clean typography, subtle embroidery, and timeless silhouettes.",
+    "image_url": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1000&auto=format&fit=crop",
+    "is_active": true,
+    "sort_order": 5,
+    "meta_title": "",
+    "meta_description": ""
+  }
+},
+{
+  "model": "tags.tag",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.294Z",
+    "updated_at": "2026-09-17T05:13:45.294Z",
+    "name": "Minimal",
+    "slug": "minimal",
+    "is_active": true
+  }
+},
+{
+  "model": "tags.tag",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.301Z",
+    "updated_at": "2026-09-17T05:13:45.301Z",
+    "name": "Graphic",
+    "slug": "graphic",
+    "is_active": true
+  }
+},
+{
+  "model": "tags.tag",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.306Z",
+    "updated_at": "2026-09-17T05:13:45.306Z",
+    "name": "Anime",
+    "slug": "anime",
+    "is_active": true
+  }
+},
+{
+  "model": "tags.tag",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.311Z",
+    "updated_at": "2026-09-17T05:13:45.311Z",
+    "name": "Oversized",
+    "slug": "oversized",
+    "is_active": true
+  }
+},
+{
+  "model": "tags.tag",
+  "pk": 5,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.317Z",
+    "updated_at": "2026-09-17T05:13:45.317Z",
+    "name": "Vintage",
+    "slug": "vintage",
+    "is_active": true
+  }
+},
+{
+  "model": "tags.tag",
+  "pk": 6,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.322Z",
+    "updated_at": "2026-09-17T05:13:45.322Z",
+    "name": "100% Cotton",
+    "slug": "100-cotton",
+    "is_active": true
+  }
+},
+{
+  "model": "tags.tag",
+  "pk": 7,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.327Z",
+    "updated_at": "2026-09-17T05:13:45.327Z",
+    "name": "Streetwear",
+    "slug": "streetwear",
+    "is_active": true
+  }
+},
+{
+  "model": "tags.tag",
+  "pk": 8,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.332Z",
+    "updated_at": "2026-09-17T05:13:45.332Z",
+    "name": "Acid Wash",
+    "slug": "acid-wash",
+    "is_active": true
+  }
+},
+{
+  "model": "tags.tag",
+  "pk": 9,
+  "fields": {
+    "created_at": "2026-09-17T05:13:45.337Z",
+    "updated_at": "2026-09-17T05:13:45.337Z",
+    "name": "Heavyweight 240 GSM",
+    "slug": "heavyweight-240-gsm",
+    "is_active": true
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-16T10:44:01.764Z",
+    "updated_at": "2026-09-16T10:44:01.764Z",
+    "user": [
+      "garikinakarthik459@gmail.com"
+    ]
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-22T07:38:53.308Z",
+    "updated_at": "2026-09-22T07:38:53.308Z",
+    "user": [
+      "23p31a4222@acet.ac.in"
+    ]
+  }
+},
+{
+  "model": "cart.cart",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-24T07:30:05.283Z",
+    "updated_at": "2026-09-24T07:30:05.284Z",
+    "user": [
+      "nakkashyam205@gmail.com"
+    ]
+  }
+},
+{
+  "model": "cart.cartitem",
+  "pk": 6,
+  "fields": {
+    "created_at": "2026-09-29T06:14:47.288Z",
+    "updated_at": "2026-09-29T06:14:47.288Z",
+    "cart": 3,
+    "product": 6,
+    "size": 3,
+    "color": 6,
+    "quantity": 1
+  }
+},
+{
+  "model": "cart.cartitem",
+  "pk": 7,
+  "fields": {
+    "created_at": "2026-09-29T06:22:27.582Z",
+    "updated_at": "2026-09-29T06:22:27.582Z",
+    "cart": 3,
+    "product": 4,
+    "size": 3,
+    "color": 5,
+    "quantity": 1
+  }
+},
+{
+  "model": "cart.cartitem",
+  "pk": 8,
+  "fields": {
+    "created_at": "2026-09-30T12:00:54.778Z",
+    "updated_at": "2026-09-30T12:00:54.778Z",
+    "cart": 3,
+    "product": 7,
+    "size": 2,
+    "color": 4,
+    "quantity": 2
+  }
+},
+{
+  "model": "orders.shippingconfig",
+  "pk": 1,
+  "fields": {
+    "flat_shipping_charge": "99.00",
+    "free_shipping_threshold": "999.00"
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-17T05:41:09.729Z",
+    "updated_at": "2026-10-01T05:18:39.627Z",
+    "user": [
+      "garikinakarthik459@gmail.com"
+    ],
+    "order_number": "ORD-20260917-VFQ6",
+    "status": "delivered",
+    "shipping_address": {
+      "city": "Kakinada",
+      "phone": "07842129339",
+      "state": "Andhra Pradesh",
+      "pincode": "533461",
+      "full_name": "Garikina Karthik",
+      "address_line_1": "Chollangi",
+      "address_line_2": "Chollangi peta"
+    },
+    "subtotal": "3297.00",
+    "shipping_cost": "0.00",
+    "total": "3297.00",
+    "notes": ""
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-21T08:40:44.036Z",
+    "updated_at": "2026-09-30T12:28:10.481Z",
+    "user": [
+      "garikinakarthik459@gmail.com"
+    ],
+    "order_number": "ORD-20260921-1AJ3",
+    "status": "cancelled",
+    "shipping_address": {
+      "city": "Kakinada",
+      "phone": "07842129339",
+      "state": "Andhra Pradesh",
+      "pincode": "533461",
+      "full_name": "Garikina Karthik",
+      "address_line_1": "Chollangi",
+      "address_line_2": "Chollangi peta"
+    },
+    "subtotal": "1898.00",
+    "shipping_cost": "0.00",
+    "total": "1898.00",
+    "notes": "Cancelled by user. Reason: Other"
+  }
+},
+{
+  "model": "orders.order",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-22T07:39:52.770Z",
+    "updated_at": "2026-09-24T07:15:12.046Z",
+    "user": [
+      "23p31a4222@acet.ac.in"
+    ],
+    "order_number": "ORD-20260922-VY0T",
+    "status": "packed",
+    "shipping_address": {
+      "city": "Kakinada",
+      "phone": "07842129339",
+      "state": "Andhra Pradesh",
+      "pincode": "533461",
+      "full_name": "Garikina Karthik",
+      "address_line_1": "Chollangi",
+      "address_line_2": "Chollangi peta"
+    },
+    "subtotal": "899.00",
+    "shipping_cost": "99.00",
+    "total": "998.00",
+    "notes": ""
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 1,
+  "fields": {
+    "order": 1,
+    "product_name": "Essential Minimalist Boxy Tee",
+    "product_slug": "essential-minimalist-boxy-tee",
+    "product_image_url": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1000&auto=format&fit=crop",
+    "price": "999.00",
+    "size": "L",
+    "color": "Vintage White",
+    "quantity": 2
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 2,
+  "fields": {
+    "order": 1,
+    "product_name": "Cyber Mecha Blueprint Tee",
+    "product_slug": "cyber-mecha-blueprint-tee",
+    "product_image_url": "https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=1000&auto=format&fit=crop",
+    "price": "1299.00",
+    "size": "M",
+    "color": "Forest Green",
+    "quantity": 1
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 3,
+  "fields": {
+    "order": 2,
+    "product_name": "Classic Raw White Heavyweight Tee",
+    "product_slug": "classic-raw-white-heavyweight-tee",
+    "product_image_url": "https://images.unsplash.com/photo-1581655353564-df123a1eb820?q=80&w=1000&auto=format&fit=crop",
+    "price": "899.00",
+    "size": "M",
+    "color": "Washed Black",
+    "quantity": 1
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 4,
+  "fields": {
+    "order": 2,
+    "product_name": "Essential Minimalist Boxy Tee",
+    "product_slug": "essential-minimalist-boxy-tee",
+    "product_image_url": "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?q=80&w=1000&auto=format&fit=crop",
+    "price": "999.00",
+    "size": "M",
+    "color": "Vintage White",
+    "quantity": 1
+  }
+},
+{
+  "model": "orders.orderitem",
+  "pk": 5,
+  "fields": {
+    "order": 3,
+    "product_name": "Classic Raw White Heavyweight Tee",
+    "product_slug": "classic-raw-white-heavyweight-tee",
+    "product_image_url": "https://images.unsplash.com/photo-1581655353564-df123a1eb820?q=80&w=1000&auto=format&fit=crop",
+    "price": "899.00",
+    "size": "S",
+    "color": "Vintage White",
+    "quantity": 1
+  }
+},
+{
+  "model": "payments.payment",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-22T07:39:57.683Z",
+    "updated_at": "2026-09-22T07:39:57.683Z",
+    "order": 3,
+    "method": "razorpay",
+    "amount": "998.00",
+    "status": "paid",
+    "razorpay_order_id": "order_Tf0GeE2KwhMg95",
+    "razorpay_payment_id": "pay_Tf0Han2wbsSs6Q",
+    "razorpay_signature": "e3213782ac58e98ba184e73300b76d82f99d8ffbc86516d55d63c421dda2727f",
+    "paid_at": "2026-09-22T07:41:11.261Z"
+  }
+},
+{
+  "model": "reviews.review",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-10-01T05:19:39.769Z",
+    "updated_at": "2026-10-01T05:19:39.769Z",
+    "product": 2,
+    "user": [
+      "garikinakarthik459@gmail.com"
+    ],
+    "rating": 5,
+    "title": "nice quality",
+    "text": "nice nicee",
+    "is_approved": false
+  }
+},
+{
+  "model": "cms.siteconfig",
+  "pk": 1,
+  "fields": {
+    "brand_name": "CustomCollection",
+    "brand_tagline": "Premium Clothing Brand",
+    "brand_description": "Discover premium T-shirts crafted for those who appreciate quality and style.",
+    "logo_url": "https://res.cloudinary.com/uv6p4myg/image/upload/f_auto/q_auto/ChatGPT_Image_Sep_30_2026_05_23_35_PM.png",
+    "favicon_url": "",
+    "contact_email": "garikinakarthik459@gmail.com",
+    "contact_phone": "7842129339",
+    "address": "Chollangi\r\nChollangi peta",
+    "instagram_url": "http://demo.com",
+    "twitter_url": "http://demo.com",
+    "facebook_url": "http://demo.com",
+    "youtube_url": "http://demo.com",
+    "footer_text": "",
+    "meta_title": "CustomCollection — Premium Clothing Brand with love",
+    "meta_description": "Shop premium T-shirts at CustomCollection. Quality designs, crafted just for you.",
+    "register_popup_enabled": true,
+    "register_popup_title": "DON'T FORGET TO REGISTER",
+    "register_popup_subtitle": "Create an account to track your orders, save items to your wishlist, and enjoy a seamless shopping experience.",
+    "register_popup_bg_image": "",
+    "register_popup_btn_text": "CREATE AN ACCOUNT"
+  }
+},
+{
+  "model": "cms.herobanner",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-09-16T17:36:35.673Z",
+    "updated_at": "2026-10-01T04:57:56.127Z",
+    "title": "cc",
+    "subtitle": "",
+    "image_url": "https://res.cloudinary.com/uv6p4myg/image/upload/f_auto/q_auto/cc_homeimage.png",
+    "link_url": "",
+    "link_text": "",
+    "show_content": false,
+    "is_active": true,
+    "sort_order": 0
+  }
+},
+{
+  "model": "cms.herobanner",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-30T07:27:23.627Z",
+    "updated_at": "2026-09-30T07:27:23.627Z",
+    "title": "Vintage Mineral Wash Drop",
+    "subtitle": "Heavyweight 240 GSM Hand-Distressed Tees",
+    "image_url": "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?q=80&w=2070&auto=format&fit=crop",
+    "link_url": "/collections/oversized",
+    "link_text": "Shop Oversized",
+    "show_content": true,
+    "is_active": true,
+    "sort_order": 2
+  }
+},
+{
+  "model": "cms.homepagesection",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-30T07:27:23.637Z",
+    "updated_at": "2026-09-30T07:42:51.790Z",
+    "collection": 4,
+    "title": "Graphic & Anime Drops",
+    "subtitle": "Original Illustrated Prints",
+    "is_active": false,
+    "sort_order": 1
+  }
+},
+{
+  "model": "cms.homepagesection",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-30T07:27:23.644Z",
+    "updated_at": "2026-09-30T07:27:23.644Z",
+    "collection": 3,
+    "title": "Heavyweight Oversized Fits",
+    "subtitle": "240 GSM Bio-Washed Combed Cotton",
+    "is_active": true,
+    "sort_order": 2
+  }
+},
+{
+  "model": "cms.announcementbar",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-30T07:27:23.617Z",
+    "updated_at": "2026-09-30T07:27:23.617Z",
+    "text": "⚡ Launch Offer: Free shipping across India on orders above ₹999!",
+    "link_url": "/collections",
+    "is_active": true,
+    "sort_order": 1
+  }
+},
+{
+  "model": "cms.announcementbar",
+  "pk": 4,
+  "fields": {
+    "created_at": "2026-09-30T07:27:23.622Z",
+    "updated_at": "2026-09-30T07:39:14.196Z",
+    "text": "🔥 New Drop: Anime & Tokyo Cyber Oversized Tees are now live!",
+    "link_url": "/collections/graphic-tees",
+    "is_active": false,
+    "sort_order": 2
+  }
+},
+{
+  "model": "cms.contactmessage",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-09-30T07:29:52.253Z",
+    "updated_at": "2026-09-30T07:29:52.253Z",
+    "name": "Alex Rivera",
+    "email": "alex@example.com",
+    "phone": "",
+    "subject": "Custom Order Inquiry",
+    "message": "I want to inquire about bulk ordering.",
+    "is_read": false
+  }
+},
+{
+  "model": "cms.contactmessage",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-09-30T07:37:22.938Z",
+    "updated_at": "2026-10-01T10:02:28.709Z",
+    "name": "Garikina Karthik",
+    "email": "garikinakarthik459@gmail.com",
+    "phone": "+917842129339",
+    "subject": "demo",
+    "message": "demooo",
+    "is_read": true
+  }
+},
+{
+  "model": "cms.newslettersubscriber",
+  "pk": 1,
+  "fields": {
+    "created_at": "2026-10-01T06:09:46.222Z",
+    "updated_at": "2026-10-01T06:09:46.222Z",
+    "email": "testsub@brandcore.com",
+    "is_active": true
+  }
+},
+{
+  "model": "cms.newslettersubscriber",
+  "pk": 2,
+  "fields": {
+    "created_at": "2026-10-01T06:21:33.403Z",
+    "updated_at": "2026-10-01T06:21:33.403Z",
+    "email": "garikinakarthik459@gmail.com",
+    "is_active": true
+  }
+},
+{
+  "model": "cms.newslettersubscriber",
+  "pk": 3,
+  "fields": {
+    "created_at": "2026-10-01T07:21:31.045Z",
+    "updated_at": "2026-10-01T07:21:31.045Z",
+    "email": "23p31a4222@acet.ac.in",
+    "is_active": true
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 1,
+  "fields": {
+    "action_time": "2026-09-16T10:43:55.006Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "accounts",
+      "user"
+    ],
+    "object_id": "4",
+    "object_repr": "garikinakarthik459@gmail.com",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is email verified\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 2,
+  "fields": {
+    "action_time": "2026-09-16T17:36:35.690Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "herobanner"
+    ],
+    "object_id": "1",
+    "object_repr": "cc",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 3,
+  "fields": {
+    "action_time": "2026-09-17T04:01:05.120Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "herobanner"
+    ],
+    "object_id": "1",
+    "object_repr": "cc",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is active\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 4,
+  "fields": {
+    "action_time": "2026-09-17T04:01:45.826Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "herobanner"
+    ],
+    "object_id": "1",
+    "object_repr": "cc",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is active\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 37,
+  "fields": {
+    "action_time": "2026-09-17T05:42:32.402Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "orders",
+      "order"
+    ],
+    "object_id": "1",
+    "object_repr": "Order ORD-20260917-VFQ6",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 38,
+  "fields": {
+    "action_time": "2026-09-21T08:36:24.183Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "herobanner"
+    ],
+    "object_id": "2",
+    "object_repr": "SS/26 Streetwear Drop",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is active\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 39,
+  "fields": {
+    "action_time": "2026-09-21T08:37:28.301Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "herobanner"
+    ],
+    "object_id": "1",
+    "object_repr": "cc",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 40,
+  "fields": {
+    "action_time": "2026-09-21T08:38:14.386Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "herobanner"
+    ],
+    "object_id": "2",
+    "object_repr": "SS/26 Streetwear Drop",
+    "action_flag": 3,
+    "change_message": ""
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 41,
+  "fields": {
+    "action_time": "2026-09-21T08:39:14.354Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "herobanner"
+    ],
+    "object_id": "1",
+    "object_repr": "cc",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 42,
+  "fields": {
+    "action_time": "2026-09-21T08:41:31.954Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "orders",
+      "order"
+    ],
+    "object_id": "2",
+    "object_repr": "Order ORD-20260921-1AJ3",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 43,
+  "fields": {
+    "action_time": "2026-09-24T07:15:12.051Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "orders",
+      "order"
+    ],
+    "object_id": "3",
+    "object_repr": "Order ORD-20260922-VY0T",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 44,
+  "fields": {
+    "action_time": "2026-09-24T07:29:44.471Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "accounts",
+      "user"
+    ],
+    "object_id": "6",
+    "object_repr": "nakkashyam205@gmail.com",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is email verified\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 45,
+  "fields": {
+    "action_time": "2026-09-29T10:07:11.945Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "announcementbar"
+    ],
+    "object_id": "1",
+    "object_repr": "this is for demo",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 46,
+  "fields": {
+    "action_time": "2026-09-29T10:11:45.826Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "collections",
+      "collection"
+    ],
+    "object_id": "1",
+    "object_repr": "Men",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is active\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 47,
+  "fields": {
+    "action_time": "2026-09-29T10:12:36.672Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "collections",
+      "collection"
+    ],
+    "object_id": "1",
+    "object_repr": "Men",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is active\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 48,
+  "fields": {
+    "action_time": "2026-09-29T10:16:14.444Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "announcementbar"
+    ],
+    "object_id": "1",
+    "object_repr": "this is for demo",
+    "action_flag": 2,
+    "change_message": "[]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 49,
+  "fields": {
+    "action_time": "2026-09-29T10:17:07.607Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "announcementbar"
+    ],
+    "object_id": "2",
+    "object_repr": "⚡ Launch Sale: Get 15% off your first order! Use code WELCOM",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 50,
+  "fields": {
+    "action_time": "2026-09-29T10:23:42.510Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "homepagesection"
+    ],
+    "object_id": "1",
+    "object_repr": "About Brand — demo",
+    "action_flag": 1,
+    "change_message": "[{\"added\": {}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 51,
+  "fields": {
+    "action_time": "2026-09-29T10:33:35.043Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "siteconfig"
+    ],
+    "object_id": "1",
+    "object_repr": "CustomCollection",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Contact email\", \"Contact phone\", \"Address\", \"Instagram url\", \"Twitter url\", \"Facebook url\", \"Youtube url\", \"Footer text\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 84,
+  "fields": {
+    "action_time": "2026-09-30T05:52:06.979Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "siteconfig"
+    ],
+    "object_id": "1",
+    "object_repr": "CustomCollection",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Logo url\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 85,
+  "fields": {
+    "action_time": "2026-09-30T05:52:24.999Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "siteconfig"
+    ],
+    "object_id": "1",
+    "object_repr": "CustomCollection",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Contact phone\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 86,
+  "fields": {
+    "action_time": "2026-09-30T06:08:46.587Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "homepagesection"
+    ],
+    "object_id": "1",
+    "object_repr": "Featured Collections — demo",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Section type\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 87,
+  "fields": {
+    "action_time": "2026-09-30T07:39:14.198Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "announcementbar"
+    ],
+    "object_id": "4",
+    "object_repr": "🔥 New Drop: Anime & Tokyo Cyber Oversized Tees are now live!",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is active\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 88,
+  "fields": {
+    "action_time": "2026-09-30T07:42:51.792Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "homepagesection"
+    ],
+    "object_id": "2",
+    "object_repr": "Graphic & Anime Drops",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is active\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 89,
+  "fields": {
+    "action_time": "2026-09-30T07:46:46.835Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "herobanner"
+    ],
+    "object_id": "1",
+    "object_repr": "cc",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Subtitle\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 90,
+  "fields": {
+    "action_time": "2026-09-30T07:48:32.489Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "herobanner"
+    ],
+    "object_id": "1",
+    "object_repr": ".",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Title\", \"Subtitle\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 91,
+  "fields": {
+    "action_time": "2026-09-30T07:50:53.977Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "siteconfig"
+    ],
+    "object_id": "1",
+    "object_repr": "CustomCollection",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Footer text\", \"Meta title\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 92,
+  "fields": {
+    "action_time": "2026-09-30T08:34:34.501Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "herobanner"
+    ],
+    "object_id": "1",
+    "object_repr": "cc",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Title\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 93,
+  "fields": {
+    "action_time": "2026-09-30T11:37:55.389Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "herobanner"
+    ],
+    "object_id": "1",
+    "object_repr": "cc",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Image url\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 94,
+  "fields": {
+    "action_time": "2026-09-30T11:46:24.318Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "herobanner"
+    ],
+    "object_id": "1",
+    "object_repr": "cc",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Image url\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 95,
+  "fields": {
+    "action_time": "2026-09-30T11:54:34.970Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "siteconfig"
+    ],
+    "object_id": "1",
+    "object_repr": "CustomCollection",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Logo url\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 96,
+  "fields": {
+    "action_time": "2026-09-30T13:00:48.125Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "orders",
+      "order"
+    ],
+    "object_id": "1",
+    "object_repr": "Order ORD-20260917-VFQ6",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 97,
+  "fields": {
+    "action_time": "2026-10-01T04:57:56.130Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "herobanner"
+    ],
+    "object_id": "1",
+    "object_repr": "cc",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Image url\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 98,
+  "fields": {
+    "action_time": "2026-10-01T05:18:39.634Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "orders",
+      "order"
+    ],
+    "object_id": "1",
+    "object_repr": "Order ORD-20260917-VFQ6",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Status\"]}}]"
+  }
+},
+{
+  "model": "admin.logentry",
+  "pk": 99,
+  "fields": {
+    "action_time": "2026-10-01T10:02:28.711Z",
+    "user": [
+      "admin@customcollection.com"
+    ],
+    "content_type": [
+      "cms",
+      "contactmessage"
+    ],
+    "object_id": "3",
+    "object_repr": "Garikina Karthik (garikinakarthik459@gmail.com) - demo",
+    "action_flag": 2,
+    "change_message": "[{\"changed\": {\"fields\": [\"Is read\"]}}]"
+  }
+}
+]

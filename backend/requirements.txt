@@ -22,6 +22,10 @@ python-decouple>=3.8
 
 # Database
 psycopg2-binary>=2.9,<3.0
+dj-database-url>=2.2.0
+
+# Static files for production (Render / WhiteNoise)
+whitenoise>=6.6.0
 
 # Image storage (Cloudinary)
 cloudinary>=1.40

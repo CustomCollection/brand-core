@@ -6,11 +6,13 @@ echo " CustomCollection Backend - Starting Up"
 echo "=========================================="
 
 # Wait for PostgreSQL to be ready
-echo "Waiting for PostgreSQL..."
-while ! nc -z "${DB_HOST:-localhost}" "${DB_PORT:-5432}"; do
-    sleep 1
-done
-echo "PostgreSQL is ready!"
+if [ -n "$DB_HOST" ] && [ "$DB_HOST" != "localhost" ]; then
+    echo "Waiting for PostgreSQL at ${DB_HOST}:${DB_PORT:-5432}..."
+    while ! nc -z "${DB_HOST}" "${DB_PORT:-5432}"; do
+        sleep 1
+    done
+    echo "PostgreSQL is ready!"
+fi
 
 # Run database migrations
 echo "Running database migrations..."
@@ -43,7 +45,7 @@ fi
 if [ "$DJANGO_ENV" = "production" ]; then
     echo "Starting Gunicorn (production)..."
     exec gunicorn config.wsgi:application \
-        --bind 0.0.0.0:8000 \
+        --bind "0.0.0.0:${PORT:-8000}" \
         --workers "${GUNICORN_WORKERS:-3}" \
         --timeout "${GUNICORN_TIMEOUT:-120}" \
         --access-logfile - \
