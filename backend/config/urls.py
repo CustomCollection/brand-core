@@ -17,16 +17,35 @@ def health_check(request):
     return JsonResponse({"status": "healthy", "service": "CustomCollection API"})
 
 
+_cached_favicon_bytes = None
+_cached_favicon_url = None
+_cached_favicon_mime = "image/png"
+
+
 def favicon_redirect(request):
-    """Redirect /favicon.ico to brand logo or favicon configured in SiteConfig."""
+    """Serve brand favicon directly with image bytes, avoiding browser 302 favicon drop."""
+    global _cached_favicon_bytes, _cached_favicon_url, _cached_favicon_mime
+    fav_url = ""
     try:
         from apps.cms.models import SiteConfig
+
         config = SiteConfig.get_config()
         fav_url = config.favicon_url or config.logo_url
         if fav_url:
-            return redirect(fav_url)
+            if _cached_favicon_bytes and _cached_favicon_url == fav_url:
+                return HttpResponse(_cached_favicon_bytes, content_type=_cached_favicon_mime)
+            import urllib.request
+
+            req = urllib.request.Request(fav_url, headers={"User-Agent": "Mozilla/5.0"})
+            with urllib.request.urlopen(req, timeout=4) as resp:
+                _cached_favicon_bytes = resp.read()
+                _cached_favicon_url = fav_url
+                _cached_favicon_mime = resp.headers.get_content_type() or "image/png"
+                return HttpResponse(_cached_favicon_bytes, content_type=_cached_favicon_mime)
     except Exception:
         pass
+    if fav_url:
+        return redirect(fav_url)
     return HttpResponse(status=204)
 
 

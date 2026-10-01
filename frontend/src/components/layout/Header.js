@@ -183,26 +183,14 @@ export default function Header({ initialSiteConfig = null }) {
               </nav>
             </div>
 
-            {/* Center: Logo (Refined, balanced & elegant) */}
+            {/* Center: Brand Name (Clean, elegant & readable) */}
             <Link
               href='/'
               className='absolute left-1/2 -translate-x-1/2 flex items-center justify-center transition-transform hover:scale-105'
             >
-              {siteConfig?.logo_url ? (
-                <img
-                  src={
-                    siteConfig.logo_url.includes('cloudinary.com') && !siteConfig.logo_url.includes('e_trim')
-                      ? siteConfig.logo_url.replace('/image/upload/', '/image/upload/e_trim/')
-                      : siteConfig.logo_url
-                  }
-                  alt={siteConfig.brand_name || 'Logo'}
-                  className='h-8 sm:h-10 md:h-11 w-auto max-w-[130px] sm:max-w-[200px] object-contain'
-                />
-              ) : (
-                <span className='text-lg sm:text-2xl font-light uppercase tracking-[0.2em] text-text-primary'>
-                  {siteConfig?.brand_name || 'CustomCollection'}
-                </span>
-              )}
+              <span className='text-lg sm:text-2xl font-light uppercase tracking-[0.2em] text-text-primary'>
+                CustomCollection
+              </span>
             </Link>
 
             {/* Right: Icons */}

@@ -14,20 +14,20 @@ export default function RegisterPopup({ siteConfig = null }) {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    // If user is logged in, never show the registration popup
+    // If user is already logged in, never show registration prompt
     if (user) return;
 
-    // Check if user already saw or dismissed the popup
+    // Check if user already saw or dismissed the prompt
     const seen = typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null;
     if (seen) return;
 
     // If popup is explicitly disabled in site configuration, don't show
     if (siteConfig && siteConfig.register_popup_enabled === false) return;
 
-    // Small polite delay after initial load before popping up
+    // Show after exactly 5 seconds as requested
     const timer = setTimeout(() => {
       setIsOpen(true);
-    }, 2000);
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, [user, siteConfig]);
@@ -49,23 +49,23 @@ export default function RegisterPopup({ siteConfig = null }) {
   if (!isOpen || user) return null;
 
   const bgImage = siteConfig?.register_popup_bg_image;
-  const title = siteConfig?.register_popup_title || 'JOIN THE CLUB & GET 10% OFF';
+  const title = siteConfig?.register_popup_title || "DON'T FORGET TO REGISTER";
   const subtitle =
     siteConfig?.register_popup_subtitle ||
-    'Sign up now to get early access to drops, exclusive collections, and member-only discounts.';
+    'Create an account to track your orders, save items to your wishlist, and enjoy a faster checkout experience.';
   const btnText = siteConfig?.register_popup_btn_text || 'CREATE AN ACCOUNT';
 
   return (
-    <div className='fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-300'>
-      {/* Backdrop */}
+    <div className='fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 pointer-events-none animate-in fade-in duration-300'>
+      {/* Click-away backdrop: completely transparent, keeps webpage background identical without any dark shade */}
       <div
         onClick={handleDismiss}
-        className='absolute inset-0 bg-black/75 backdrop-blur-sm transition-opacity cursor-pointer'
+        className='fixed inset-0 bg-transparent pointer-events-auto cursor-default'
       />
 
-      {/* Modal Dialog */}
+      {/* Floating Modal Card */}
       <div
-        className='relative w-full max-w-lg overflow-hidden border border-white/15 bg-black shadow-2xl animate-in zoom-in-95 duration-300'
+        className='pointer-events-auto relative w-full max-w-lg overflow-hidden border border-neutral-700 bg-neutral-950 shadow-[0_25px_60px_rgba(0,0,0,0.6)] animate-in zoom-in-95 duration-300'
         role='dialog'
         aria-modal='true'
         style={{
@@ -74,22 +74,27 @@ export default function RegisterPopup({ siteConfig = null }) {
           backgroundPosition: 'center',
         }}
       >
-        {/* Dark overlay over background image for crystal clear text readability */}
+        {/* Dark overlay inside the card only (so text is readable over the card's background image) */}
         <div className='absolute inset-0 bg-gradient-to-t from-black via-black/85 to-black/60 pointer-events-none' />
 
-        {/* Close Button */}
+        {/* Close Button (z-50 ensures it is always clickable above content) */}
         <button
-          onClick={handleDismiss}
-          className='absolute top-4 right-4 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-black/50 text-white/80 hover:text-white hover:bg-black/80 transition-colors cursor-pointer border border-white/10'
+          type='button'
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            handleDismiss();
+          }}
+          className='absolute top-3 right-3 z-50 flex h-9 w-9 items-center justify-center rounded-full bg-black/80 text-white/90 hover:text-white hover:bg-neutral-800 transition-all cursor-pointer border border-white/30 shadow-lg active:scale-95'
           aria-label='Close popup'
         >
-          <X size={16} />
+          <X size={18} />
         </button>
 
         {/* Content */}
         <div className='relative z-10 px-6 py-10 sm:px-10 sm:py-12 text-center text-white'>
           <p className='text-[11px] font-semibold uppercase tracking-[0.3em] text-accent mb-3'>
-            Exclusive Welcome Offer
+            Quick Reminder
           </p>
 
           <h2 className='text-2xl sm:text-3xl font-light uppercase tracking-widest text-white mb-4 leading-tight'>

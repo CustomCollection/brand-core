@@ -66,14 +66,14 @@ class SiteConfig(models.Model):
     register_popup_title = models.CharField(
         max_length=200,
         blank=True,
-        default="JOIN THE CLUB & GET 10% OFF",
+        default="DON'T FORGET TO REGISTER",
         help_text="Catchy headline for the first-visit registration prompt.",
     )
     register_popup_subtitle = models.CharField(
         max_length=300,
         blank=True,
-        default="Sign up now to get early access to drops, exclusive collections, and member-only discounts.",
-        help_text="Subtext or offer details shown on the popup.",
+        default="Create an account to track your orders, save items to your wishlist, and enjoy a seamless shopping experience.",
+        help_text="Subtext shown on the popup.",
     )
     register_popup_bg_image = models.URLField(
         max_length=500,

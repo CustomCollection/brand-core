@@ -183,11 +183,26 @@ class Product(TimeStampedModel):
     @property
     def primary_image(self):
         """Return the primary image URL or None."""
-        img = self.images.filter(is_primary=True).first()
-        if img:
-            return img.image_url
-        img = self.images.first()
-        return img.image_url if img else None
+        # Use prefetched images if available to avoid extra DB queries
+        imgs = list(self.images.all())
+        if imgs:
+            for img in imgs:
+                if img.is_primary:
+                    return img.image_url
+            return imgs[0].image_url
+        return None
+
+    @property
+    def secondary_image(self):
+        """Return the second image URL for card hover preview, or None."""
+        imgs = list(self.images.all())
+        if len(imgs) > 1:
+            primary_url = self.primary_image
+            for img in imgs:
+                if img.image_url != primary_url:
+                    return img.image_url
+            return imgs[1].image_url
+        return None
 
     @property
     def average_rating(self):

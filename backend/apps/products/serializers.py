@@ -37,6 +37,8 @@ class ProductListSerializer(serializers.ModelSerializer):
     """
 
     primary_image = serializers.CharField(read_only=True)
+    secondary_image = serializers.CharField(read_only=True)
+    images = ProductImageSerializer(many=True, read_only=True)
     effective_price = serializers.DecimalField(
         max_digits=10, decimal_places=2, read_only=True
     )
@@ -58,6 +60,8 @@ class ProductListSerializer(serializers.ModelSerializer):
             "effective_price",
             "discount_percentage",
             "primary_image",
+            "secondary_image",
+            "images",
             "is_featured",
             "is_best_seller",
             "is_new_arrival",
