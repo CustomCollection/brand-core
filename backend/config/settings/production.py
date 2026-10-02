@@ -52,6 +52,7 @@ X_FRAME_OPTIONS = "DENY"
 
 # JWT cookies — secure in production (SameSite=None for cross-domain cookie delivery)
 SIMPLE_JWT = {
+    **SIMPLE_JWT,
     "AUTH_COOKIE_SECURE": True,
     "AUTH_COOKIE_SAMESITE": config("JWT_COOKIE_SAMESITE", default="None"),
 }

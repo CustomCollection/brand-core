@@ -39,14 +39,20 @@ def register_user(validated_data):
     Returns:
         The newly created User instance.
     """
+    require_verification = getattr(settings, "ACCOUNT_EMAIL_VERIFICATION_REQUIRED", False)
     user = User.objects.create_user(
         email=validated_data["email"].lower().strip(),
         password=validated_data["password"],
         first_name=validated_data["first_name"],
         last_name=validated_data["last_name"],
+        is_email_verified=not require_verification,
     )
-    send_verification_email(user)
-    logger.info("New user registered: %s", user.email)
+    # Always send registration verification email
+    try:
+        send_verification_email(user)
+    except Exception as exc:
+        logger.error("Failed to send verification email: %s", exc)
+    logger.info("New user registered: %s (verified=%s)", user.email, user.is_email_verified)
     return user
 
 
@@ -113,12 +119,20 @@ def login_user(email, password):
         raise BadRequest("This account has been deactivated.")
 
     if not user.is_email_verified:
-        # Resend verification email as a courtesy
-        send_verification_email(user)
-        raise BadRequest(
-            "Please verify your email before logging in. "
-            "A new verification email has been sent."
-        )
+        if getattr(settings, "ACCOUNT_EMAIL_VERIFICATION_REQUIRED", False):
+            # Resend verification email as a courtesy
+            try:
+                send_verification_email(user)
+            except Exception as exc:
+                logger.error("Failed to send verification email: %s", exc)
+            raise BadRequest(
+                "Please verify your email before logging in. "
+                "A new verification email has been sent."
+            )
+        else:
+            # Auto-verify if email verification is not enforced
+            user.is_email_verified = True
+            user.save(update_fields=["is_email_verified"])
 
     tokens = generate_tokens(user)
     logger.info("User logged in: %s", user.email)
@@ -392,9 +406,9 @@ def send_verification_email(user):
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[user.email],
             html_message=html_message,
-            fail_silently=False,
+            fail_silently=True,
         )
-        logger.info("Verification email sent to: %s", user.email)
+        logger.info("Verification email triggered for: %s", user.email)
     except Exception as exc:
         logger.error("Failed to send verification email to %s: %s", user.email, exc)
 

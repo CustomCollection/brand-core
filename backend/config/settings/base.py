@@ -208,8 +208,15 @@ EMAIL_HOST = config("EMAIL_HOST", default="smtp.gmail.com")
 EMAIL_PORT = config("EMAIL_PORT", default=587, cast=int)
 EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
-EMAIL_USE_TLS = True
-DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="noreply@customcollection.com")
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=True, cast=bool)
+EMAIL_USE_SSL = config("EMAIL_USE_SSL", default=False, cast=bool)
+EMAIL_TIMEOUT = config("EMAIL_TIMEOUT", default=10, cast=int)
+_mail_user = config("EMAIL_HOST_USER", default="")
+DEFAULT_FROM_EMAIL = config(
+    "DEFAULT_FROM_EMAIL",
+    default=f"CustomCollection <{_mail_user}>" if _mail_user else "noreply@customcollection.com",
+)
+ACCOUNT_EMAIL_VERIFICATION_REQUIRED = config("ACCOUNT_EMAIL_VERIFICATION_REQUIRED", default=False, cast=bool)
 
 # CORS (base — overridden per environment)
 CORS_ALLOW_CREDENTIALS = True
