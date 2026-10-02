@@ -15,7 +15,16 @@ export function AuthProvider({ children }) {
     try {
       const data = await apiGet(ENDPOINTS.AUTH.PROFILE);
       // Profile response: { user: {...}, phone: '...', avatar_url: '...' }
-      setUser(data?.user || data);
+      if (data) {
+        const baseUser = data.user || data;
+        setUser({
+          ...baseUser,
+          phone: data.phone || baseUser.phone || '',
+          avatar_url: data.avatar_url || baseUser.avatar_url || '',
+        });
+      } else {
+        setUser(null);
+      }
     } catch {
       setUser(null);
     } finally {
@@ -30,9 +39,9 @@ export function AuthProvider({ children }) {
   const login = useCallback(async (email, password) => {
     const data = await apiPost(ENDPOINTS.AUTH.LOGIN, { email, password });
     // Response: { message: '...', user: {...} } — cookies set by server
-    setUser(data.user);
+    await refreshUser();
     return data;
-  }, []);
+  }, [refreshUser]);
 
   const register = useCallback(async ({ email, first_name, last_name, password }) => {
     // Always send password_confirm as backend requires it for validation
@@ -60,7 +69,14 @@ export function AuthProvider({ children }) {
     // Backend uses PUT for profile updates
     const data = await apiPut(ENDPOINTS.AUTH.PROFILE, updates);
     // Response: { message: '...', user: {...}, phone: '...', avatar_url: '...' }
-    setUser(data.user || data);
+    if (data) {
+      const baseUser = data.user || data;
+      setUser({
+        ...baseUser,
+        phone: data.phone || baseUser.phone || updates.phone || '',
+        avatar_url: data.avatar_url || baseUser.avatar_url || '',
+      });
+    }
     return data;
   }, []);
 

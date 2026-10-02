@@ -98,7 +98,8 @@ export default function ProfilePage() {
             type='tel'
             value={profileData.phone}
             onChange={(e) => setProfileData((p) => ({ ...p, phone: e.target.value }))}
-            placeholder='+91 98765 43210'
+            placeholder='e.g. 78931 23456'
+            helperText='You can update your phone number anytime.'
           />
           <Button type='submit' isLoading={isSavingProfile}>
             Save Changes

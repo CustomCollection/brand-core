@@ -93,6 +93,8 @@ class UserSerializer(serializers.ModelSerializer):
     """Read-only serializer for User data."""
 
     full_name = serializers.CharField(read_only=True)
+    phone = serializers.CharField(source="profile.phone", read_only=True, default="")
+    avatar_url = serializers.CharField(source="profile.avatar_url", read_only=True, default="")
 
     class Meta:
         model = User
@@ -102,6 +104,8 @@ class UserSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "full_name",
+            "phone",
+            "avatar_url",
             "is_email_verified",
             "date_joined",
         ]
