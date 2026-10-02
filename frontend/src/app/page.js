@@ -29,7 +29,7 @@ export default async function HomePage() {
   const featuredProducts = data?.featured_products || [];
 
   return (
-    <div className='bg-background'>
+    <div className='bg-background pt-20 md:pt-0'>
       {/* ─── HERO BANNER SLIDER ─── */}
       <HeroSlider banners={banners} />
 

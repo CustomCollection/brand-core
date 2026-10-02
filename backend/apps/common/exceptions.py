@@ -39,15 +39,35 @@ class ServiceUnavailable(APIException):
     default_code = "service_unavailable"
 
 
+def _extract_first_error(data):
+    """
+    Recursively extract the first user-friendly error message from DRF error structures.
+    """
+    if isinstance(data, str):
+        return data
+    if isinstance(data, list) and data:
+        return _extract_first_error(data[0])
+    if isinstance(data, dict):
+        if "non_field_errors" in data and data["non_field_errors"]:
+            return _extract_first_error(data["non_field_errors"])
+        if "detail" in data and data["detail"]:
+            return _extract_first_error(data["detail"])
+        for _field, err in data.items():
+            msg = _extract_first_error(err)
+            if msg:
+                return msg
+    return None
+
+
 def custom_exception_handler(exc, context):
     """
     Custom exception handler that wraps DRF's default handler output
-    into a consistent API response format.
+    into a consistent API response format with clear, specific error messages.
 
     Response format:
         {
             "status": "error",
-            "message": "<error summary>",
+            "message": "<human-readable error summary>",
             "errors": { ... }  // field-level errors if applicable
         }
     """
@@ -68,10 +88,12 @@ def custom_exception_handler(exc, context):
             error_payload["message"] = str(response.data["detail"])
         else:
             # Field-level validation errors
-            error_payload["message"] = "Validation error."
             error_payload["errors"] = response.data
+            extracted = _extract_first_error(response.data)
+            error_payload["message"] = str(extracted) if extracted else "Validation error."
     elif isinstance(response.data, list):
-        error_payload["message"] = response.data[0] if response.data else "An error occurred."
+        extracted = _extract_first_error(response.data)
+        error_payload["message"] = str(extracted) if extracted else (str(response.data[0]) if response.data else "An error occurred.")
     else:
         error_payload["message"] = str(response.data)
 

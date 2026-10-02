@@ -138,12 +138,32 @@ async function request(endpoint, options = {}) {
     let errors = null;
 
     if (typeof data === 'object' && data !== null) {
-      // Backend error envelope: { status: 'error', message: '...', errors: {...} }
-      if (data.message) message = data.message;
-      else if (data.detail) message = data.detail;
-      else message = JSON.stringify(data);
+      if (data.errors && typeof data.errors === 'object') {
+        errors = data.errors;
+      }
 
-      if (data.errors) errors = data.errors;
+      const isGeneric =
+        !data.message ||
+        data.message === 'Validation error.' ||
+        data.message === 'An error occurred.' ||
+        data.message === 'Bad request.';
+
+      if (isGeneric && errors) {
+        const firstKey = Object.keys(errors)[0];
+        if (firstKey) {
+          const val = errors[firstKey];
+          const firstMsg = Array.isArray(val) ? val[0] : typeof val === 'string' ? val : null;
+          if (firstMsg) {
+            message = firstMsg;
+          }
+        }
+      }
+
+      if (message === `Request failed with status ${response.status}`) {
+        if (data.message) message = data.message;
+        else if (data.detail) message = data.detail;
+        else message = JSON.stringify(data);
+      }
     }
 
     throw new ApiError(message, response.status, { message, errors, raw: data });
