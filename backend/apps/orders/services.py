@@ -218,7 +218,7 @@ def send_order_confirmation_email(order):
             {
                 "order": order,
                 "items": order.items.all(),
-                "tracking_link": f"{settings.FRONTEND_URL}/orders/{order.order_number}",
+                "tracking_link": f"{settings.FRONTEND_URL}/account/orders/{order.order_number}",
             },
         )
         send_mail(
@@ -242,7 +242,7 @@ def send_shipping_update_email(order):
             {
                 "order": order,
                 "shipment": shipment,
-                "tracking_link": f"{settings.FRONTEND_URL}/orders/{order.order_number}",
+                "tracking_link": f"{settings.FRONTEND_URL}/account/orders/{order.order_number}",
             },
         )
         send_mail(
@@ -264,7 +264,7 @@ def send_delivery_email(order):
             "emails/order_delivered_email.html",
             {
                 "order": order,
-                "review_link": f"{settings.FRONTEND_URL}/orders/{order.order_number}",
+                "review_link": f"{settings.FRONTEND_URL}/account/orders/{order.order_number}",
             },
         )
         send_mail(

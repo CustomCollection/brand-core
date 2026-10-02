@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, use } from 'react';
 import Link from 'next/link';
 import { CheckCircle, XCircle } from 'lucide-react';
 import { apiPost } from '@/lib/api';
@@ -8,7 +8,9 @@ import { ENDPOINTS } from '@/lib/endpoints';
 import Spinner from '@/components/ui/Spinner';
 
 export default function VerifyEmailPage({ params }) {
-  const { uid, token } = params;
+  const resolved = params && typeof params.then === 'function' ? use(params) : params;
+  const uid = resolved?.uid;
+  const token = resolved?.token;
   const [status, setStatus] = useState('loading'); // 'loading' | 'success' | 'error'
   const [message, setMessage] = useState('');
 

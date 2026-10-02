@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, use } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -43,7 +43,8 @@ const CANCEL_REASONS = [
 ];
 
 export default function OrderDetailPage({ params }) {
-  const { orderNumber } = params;
+  const resolved = params && typeof params.then === 'function' ? use(params) : params;
+  const orderNumber = resolved?.orderNumber;
   const [order, setOrder] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
