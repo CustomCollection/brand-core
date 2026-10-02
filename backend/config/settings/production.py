@@ -24,8 +24,10 @@ _default_csrf = ["https://*.vercel.app", "https://*.onrender.com", "http://local
 _custom_csrf = [x.strip() for x in config("CSRF_TRUSTED_ORIGINS", default="", cast=Csv()) if x.strip()]
 CSRF_TRUSTED_ORIGINS = list(dict.fromkeys(_default_csrf + _custom_csrf))
 
-# Email — use SMTP if credentials provided, otherwise fallback to console (no crash)
-if config("EMAIL_HOST_USER", default=""):
+# Email — use Resend HTTP API (recommended on Render free tier to bypass port blocking), or SMTP
+if config("RESEND_API_KEY", default=""):
+    EMAIL_BACKEND = "apps.common.email_backend.ResendEmailBackend"
+elif config("EMAIL_HOST_USER", default=""):
     EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 else:
     EMAIL_BACKEND = config(
