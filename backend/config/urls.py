@@ -66,6 +66,8 @@ api_v1_patterns = [
 ]
 
 urlpatterns = [
+    # Root Health check & Ping
+    path("", health_check, name="root-health-check"),
     # Favicon
     path("favicon.ico", favicon_redirect, name="favicon"),
     # Admin
