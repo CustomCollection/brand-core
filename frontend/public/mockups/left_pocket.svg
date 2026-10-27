@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 700" width="100%" height="100%">
+  <defs>
+    <filter id="shadow-lp" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-opacity="0.12"/>
+    </filter>
+    <linearGradient id="shading-lp" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.18"/>
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#shadow-lp)">
+    <!-- Chest Close-Up Body -->
+    <path class="garment-color" fill="currentColor" stroke="#333333" stroke-width="1.5"
+      d="M 50 50 L 550 50 L 550 650 L 50 650 Z" />
+    <path fill="url(#shading-lp)" d="M 50 50 L 550 50 L 550 650 L 50 650 Z" />
+
+    <!-- Left Chest Pocket Guideline Contour -->
+    <g transform="translate(320, 200)">
+      <path fill="rgba(0,0,0,0.05)" stroke="#666666" stroke-width="2" stroke-dasharray="4,3"
+        d="M 0 0 L 160 0 L 160 140 L 80 190 L 0 140 Z" />
+      <text x="80" y="80" text-anchor="middle" font-size="14" font-weight="600" fill="#666666" font-family="sans-serif">
+        LEFT POCKET
+      </text>
+      <text x="80" y="105" text-anchor="middle" font-size="11" fill="#888888" font-family="sans-serif">
+        4" x 4" Max
+      </text>
+    </g>
+
+    <!-- Collar Arc Hint -->
+    <path fill="none" stroke="#222222" stroke-width="4" d="M 50 80 C 150 140, 250 140, 280 50" />
+  </g>
+</svg>

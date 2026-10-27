@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 700" width="100%" height="100%">
+  <defs>
+    <filter id="shadow-ls" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-opacity="0.12"/>
+    </filter>
+    <linearGradient id="shading-ls" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.25"/>
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#shadow-ls)">
+    <!-- Sleeve & Arm Silhouette -->
+    <!-- Shoulder & Sleeve Outline -->
+    <path class="garment-color" fill="currentColor" stroke="#333333" stroke-width="1.5"
+      d="M 100 80 
+         C 200 60, 360 100, 480 200 
+         L 410 460 
+         C 360 440, 290 410, 240 370 
+         L 100 370 
+         Z" />
+    <path fill="url(#shading-ls)"
+      d="M 100 80 
+         C 200 60, 360 100, 480 200 
+         L 410 460 
+         C 360 440, 290 410, 240 370 
+         L 100 370 
+         Z" />
+
+    <!-- Sleeve Hem Stitching -->
+    <path fill="none" stroke="#555555" stroke-width="2" stroke-dasharray="4,2"
+      d="M 240 370 L 410 460" />
+
+    <!-- Sleeve Area Guideline -->
+    <g transform="translate(230, 200)">
+      <text x="50" y="30" text-anchor="middle" font-size="14" font-weight="600" fill="#666666" font-family="sans-serif">
+        LEFT SLEEVE
+      </text>
+      <text x="50" y="55" text-anchor="middle" font-size="11" fill="#888888" font-family="sans-serif">
+        4" x 4" Max
+      </text>
+    </g>
+  </g>
+</svg>

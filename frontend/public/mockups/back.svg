@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 700" width="100%" height="100%">
+  <defs>
+    <filter id="shadow-back" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-opacity="0.12"/>
+    </filter>
+    <linearGradient id="shading-back" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.2"/>
+      <stop offset="50%" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0.25"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Garment Body Base Back -->
+  <g filter="url(#shadow-back)">
+    <path class="garment-color" fill="currentColor" stroke="#333333" stroke-width="1.5" stroke-linejoin="round"
+      d="M 230 50 
+         C 265 60, 335 60, 370 50 
+         L 460 85 
+         L 540 185 
+         L 475 235 
+         L 435 180 
+         L 435 630 
+         C 435 640, 425 645, 415 645 
+         L 185 645 
+         C 175 645, 165 640, 165 630 
+         L 165 180 
+         L 125 235 
+         L 60 185 
+         L 140 85 
+         Z" />
+
+    <!-- Shading Overlay -->
+    <path fill="url(#shading-back)"
+      d="M 230 50 
+         C 265 60, 335 60, 370 50 
+         L 460 85 
+         L 540 185 
+         L 475 235 
+         L 435 180 
+         L 435 630 
+         C 435 640, 425 645, 415 645 
+         L 185 645 
+         C 175 645, 165 640, 165 630 
+         L 165 180 
+         L 125 235 
+         L 60 185 
+         L 140 85 
+         Z" />
+
+    <!-- Back Collar Rim -->
+    <path fill="none" stroke="#222222" stroke-width="3"
+      d="M 230 50 C 265 60, 335 60, 370 50" />
+    <path fill="none" stroke="#555555" stroke-width="1.5" stroke-dasharray="3,2"
+      d="M 230 55 C 265 65, 335 65, 370 55" />
+
+    <!-- Back Neck Crescent / Half-moon panel -->
+    <path fill="none" stroke="#444444" stroke-width="1" stroke-dasharray="2,2"
+      d="M 235 68 C 265 95, 335 95, 365 68" />
+
+    <!-- Sleeve Seams -->
+    <path fill="none" stroke="#444444" stroke-width="1.5"
+      d="M 140 85 L 165 180 M 460 85 L 435 180" />
+
+    <!-- Bottom Hem Stitching -->
+    <line x1="168" y1="635" x2="432" y2="635" stroke="#555555" stroke-width="1" stroke-dasharray="4,2" />
+  </g>
+</svg>

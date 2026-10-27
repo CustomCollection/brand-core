@@ -180,6 +180,22 @@ export default function Header({ initialSiteConfig = null }) {
                     </div>
                   )}
                 </div>
+
+                {/* Custom Design Studio Navigation Link */}
+                <Link
+                  href='/design'
+                  className={cn(
+                    'ml-6 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest transition-colors py-2 group cursor-pointer',
+                    pathname.startsWith('/design')
+                      ? 'text-accent font-bold'
+                      : 'text-text-primary hover:text-accent'
+                  )}
+                >
+                  <span>Design</span>
+                  <span className='inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-accent/15 text-accent'>
+                    Custom
+                  </span>
+                </Link>
               </nav>
             </div>
 
@@ -402,6 +418,16 @@ export default function Header({ initialSiteConfig = null }) {
               )}
             </div>
 
+            {/* Mobile Design Studio Link */}
+            <Link
+              href='/design'
+              onClick={() => setIsMobileOpen(false)}
+              className='flex items-center justify-between border-b border-border px-6 py-4 text-sm font-semibold uppercase tracking-widest text-text-primary hover:bg-surface hover:text-accent transition-colors'
+            >
+              <span>Design Studio</span>
+              <span className='px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-accent/15 text-accent'>Custom</span>
+            </Link>
+
             <div className='border-b border-border px-6 py-4'>
               {user ? (
                 <>
@@ -461,9 +487,25 @@ export default function Header({ initialSiteConfig = null }) {
                     Create Account
                   </Link>
                 </div>
-              )}
-            </div>
-          </nav>
+                  )}
+                </div>
+
+                {/* Custom Design Studio Navigation Link */}
+                <Link
+                  href='/design'
+                  className={cn(
+                    'ml-6 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest transition-colors py-2 group cursor-pointer',
+                    pathname.startsWith('/design')
+                      ? 'text-accent font-bold'
+                      : 'text-text-primary hover:text-accent'
+                  )}
+                >
+                  <span>Design</span>
+                  <span className='inline-flex items-center px-1.5 py-0.5 rounded-full text-[9px] font-extrabold uppercase bg-accent/15 text-accent'>
+                    Custom
+                  </span>
+                </Link>
+              </nav>
         </div>
       )}
     </>
