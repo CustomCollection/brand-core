@@ -1,0 +1,7 @@
+from django.apps import AppConfig
+
+
+class DesignerConfig(AppConfig):
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "apps.designer"
+    verbose_name = "Fabric.js Design Editor"

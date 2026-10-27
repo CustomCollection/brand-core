@@ -63,6 +63,11 @@ api_v1_patterns = [
     path("cms/", include("apps.cms.urls")),
     # Search
     path("search/", include("apps.products.urls_search")),
+    # CustomCollection Design Engine
+    path("catalog/", include("apps.catalog.urls")),
+    path("designer/", include("apps.designer.urls")),
+    path("ai-studio/", include("apps.ai_studio.urls")),
+    path("fulfillment/", include("apps.fulfillment.urls")),
 ]
 
 urlpatterns = [

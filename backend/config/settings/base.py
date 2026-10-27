@@ -48,6 +48,11 @@ LOCAL_APPS = [
     "apps.reviews",
     "apps.wishlist",
     "apps.cms",
+    # CustomCollection Design Engine
+    "apps.catalog",
+    "apps.designer",
+    "apps.ai_studio",
+    "apps.fulfillment",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
