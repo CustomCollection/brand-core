@@ -15,6 +15,7 @@ export default function DesignMetricsPanel({
   metrics,
   activePlacement,
   onAddArtwork,
+  onOpenAIDrawer,
   onSave,
   isSaving,
   saveStatus,
@@ -113,25 +114,38 @@ export default function DesignMetricsPanel({
               onChange={handleFileChange}
             />
 
-            {/* "Add Your Design" Button (Orange button matching reference image 1 & 3) */}
-            <button
-              type="button"
-              disabled={isUploading}
-              onClick={() => fileInputRef.current?.click()}
-              className="w-full py-3.5 px-4 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-sm tracking-wide shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-            >
-              {isUploading ? (
-                <>
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  <span>Processing Artwork...</span>
-                </>
-              ) : (
-                <>
-                  <Upload className="w-5 h-5" />
-                  <span>Add Your Design</span>
-                </>
-              )}
-            </button>
+            {/* Dual Action Buttons: Upload Design & Let's Design by AI */}
+            <div className="grid grid-cols-2 gap-2.5">
+              <button
+                type="button"
+                disabled={isUploading}
+                onClick={() => fileInputRef.current?.click()}
+                className="py-3 px-3 rounded-xl bg-orange-500 hover:bg-orange-600 text-white font-bold text-xs sm:text-sm tracking-wide shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer disabled:opacity-50"
+                title="Upload image from your device"
+              >
+                {isUploading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+                    <span className="truncate">Uploading...</span>
+                  </>
+                ) : (
+                  <>
+                    <Upload className="w-4 h-4 shrink-0" />
+                    <span className="truncate">Add Design</span>
+                  </>
+                )}
+              </button>
+
+              <button
+                type="button"
+                onClick={onOpenAIDrawer}
+                className="py-3 px-3 rounded-xl bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 hover:from-violet-700 hover:to-indigo-700 text-white font-bold text-xs sm:text-sm tracking-wide shadow-md hover:shadow-lg transition-all flex items-center justify-center gap-1.5 cursor-pointer group"
+                title="Design with AI Artwork Studio"
+              >
+                <Sparkles className="w-4 h-4 text-amber-300 group-hover:rotate-12 transition-transform shrink-0" />
+                <span className="truncate">Design by AI</span>
+              </button>
+            </div>
 
             {/* Live Design Metrics Box (Matching Reference Image 3) */}
             <div className="bg-neutral-50 dark:bg-neutral-800/50 border border-neutral-200 dark:border-neutral-800 rounded-2xl p-4 space-y-2.5">

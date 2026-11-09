@@ -33,13 +33,10 @@ export const DESIGN_ENDPOINTS = {
   AI_STUDIO: {
     CHATS: '/ai-studio/chats/',
     CHAT_DETAIL: (id) => `/ai-studio/chats/${id}/`,
-    MESSAGES: (chatId) => `/ai-studio/chats/${chatId}/messages/`,
     SEND_MESSAGE: (chatId) => `/ai-studio/chats/${chatId}/send/`,
-    GENERATE_ARTWORK: (chatId) => `/ai-studio/chats/${chatId}/generate/`,
-    ASSETS: (chatId) => `/ai-studio/chats/${chatId}/assets/`,
+    ARTWORK_DELETE: (id) => `/ai-studio/artworks/${id}/`,
     TOKEN_BALANCE: '/ai-studio/tokens/balance/',
     TOKEN_PACKAGES: '/ai-studio/tokens/packages/',
-    TOKEN_PURCHASE: '/ai-studio/tokens/purchase/',
   },
 
   // Fulfillment & Tracking (Phase 5)

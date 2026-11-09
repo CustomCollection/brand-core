@@ -1,6 +1,6 @@
 'use client';
 
-import { use, useRef } from 'react';
+import { use, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save, Sparkles, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
@@ -8,6 +8,7 @@ import useDesignSession from '@/hooks/useDesignSession';
 import PlacementSidebar from '@/components/design/editor/PlacementSidebar';
 import FabricCanvas from '@/components/design/editor/FabricCanvas';
 import DesignMetricsPanel from '@/components/design/editor/DesignMetricsPanel';
+import AIDesignDrawer from '@/components/ai/AIDesignDrawer';
 
 export default function DesignEditorSessionPage({ params }) {
   // In Next.js 15 App Router, dynamic params can be a Promise
@@ -15,6 +16,7 @@ export default function DesignEditorSessionPage({ params }) {
   const sessionId = resolvedParams?.sessionId;
   const router = useRouter();
   const canvasRef = useRef(null);
+  const [isAIDrawerOpen, setIsAIDrawerOpen] = useState(false);
 
   const {
     session,
@@ -69,6 +71,23 @@ export default function DesignEditorSessionPage({ params }) {
         asset.width_px || 1200,
         asset.height_px || 1200
       );
+    }
+  };
+
+  // Placement human-readable label mapping
+  const placementLabels = {
+    fr: 'Front Placement',
+    bk: 'Back Placement',
+    lp: 'Left Pocket Placement',
+    rp: 'Right Pocket Placement',
+    ls: 'Left Sleeve Placement',
+    rs: 'Right Sleeve Placement',
+  };
+
+  // Handle artwork selection from AI Design Studio Drawer
+  const handleUseAIArtwork = (imageUrl, widthPx = 1024, heightPx = 1024) => {
+    if (canvasRef.current && imageUrl) {
+      canvasRef.current.addArtwork(imageUrl, widthPx, heightPx);
     }
   };
 
@@ -200,12 +219,22 @@ export default function DesignEditorSessionPage({ params }) {
             metrics={activeMetrics}
             activePlacement={activePlacement}
             onAddArtwork={handleAddArtwork}
+            onOpenAIDrawer={() => setIsAIDrawerOpen(true)}
             onSave={saveSession}
             isSaving={isSaving}
             saveStatus={saveStatus}
           />
         </div>
       </main>
+
+      {/* AI Design Studio Slide-Over Drawer */}
+      <AIDesignDrawer
+        isOpen={isAIDrawerOpen}
+        onClose={() => setIsAIDrawerOpen(false)}
+        activePlacement={activePlacement}
+        placementLabel={placementLabels[activePlacement] || activePlacement}
+        onUseArtwork={handleUseAIArtwork}
+      />
     </div>
   );
 }
